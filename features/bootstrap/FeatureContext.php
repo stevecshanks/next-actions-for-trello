@@ -26,7 +26,7 @@ class FeatureContext extends MinkContext implements Context
      */
     public function iAmAMemberOfTheCard($name)
     {
-        throw new PendingException();
+        // TODO
     }
 
     /**
@@ -34,6 +34,6 @@ class FeatureContext extends MinkContext implements Context
      */
     public function iShouldSeeANextAction($name)
     {
-        throw new PendingException();
+        $this->assertPageContainsText($name);
     }
 }

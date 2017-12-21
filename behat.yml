@@ -7,4 +7,7 @@ default:
       base_url:  'http://localhost:8000'
       sessions:
         default:
-          selenium2: ~
+          selenium2:
+            capabilities:
+                marionette: null
+

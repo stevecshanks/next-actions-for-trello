@@ -6,19 +6,15 @@ use InvalidArgumentException;
 
 class Json
 {
-    /** @var string */
-    protected $jsonString;
     /** @var mixed */
     protected $decoded;
 
     /**
      * Json constructor.
-     * @param string $jsonString
      * @param mixed $decoded
      */
-    protected function __construct(string $jsonString, $decoded)
+    protected function __construct($decoded)
     {
-        $this->jsonString = $jsonString;
         $this->decoded = $decoded;
     }
 
@@ -34,7 +30,7 @@ class Json
             throw new InvalidArgumentException("Invalid JSON: " . json_last_error_msg());
         }
 
-        return new Json($jsonString, $decoded);
+        return new Json($decoded);
     }
 
     /**

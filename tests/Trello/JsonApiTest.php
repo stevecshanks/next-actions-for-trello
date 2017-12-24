@@ -1,5 +1,6 @@
 <?php
 
+use App\Trello\Auth;
 use App\Trello\JsonApi;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
@@ -13,7 +14,7 @@ class JsonApiTest extends TestCase
     {
         $response = new Response(200, [], json_encode([]));
         $client = $this->createMockClientWithResponse($response);
-        $api = new JsonApi($client);
+        $api = new JsonApi($client, new Auth('foo', 'bar'));
 
         $this->assertSame([], $api->fetchCardsIAmAMemberOf());
     }
@@ -35,7 +36,7 @@ class JsonApiTest extends TestCase
             ])
         );
         $client = $this->createMockClientWithResponse($response);
-        $api = new JsonApi($client);
+        $api = new JsonApi($client, new Auth('foo', 'bar'));
 
         $results = $api->fetchCardsIAmAMemberOf();
 

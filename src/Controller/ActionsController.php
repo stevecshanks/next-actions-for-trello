@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Trello\Auth;
-use App\Trello\JsonApi;
-use GuzzleHttp\Client;
+use App\Trello\Api;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -15,13 +13,9 @@ class ActionsController
      *
      * @return Response
      */
-    public function list()
+    public function list(Api $trelloApi)
     {
-        $api = new JsonApi(
-            new Client(),
-            new Auth($_SERVER['TRELLO_API_KEY'], $_SERVER['TRELLO_API_TOKEN'])
-        );
-        $cards = $api->fetchCardsIAmAMemberOf();
+        $cards = $trelloApi->fetchCardsIAmAMemberOf();
 
         $listElements = "";
         foreach ($cards as $card) {

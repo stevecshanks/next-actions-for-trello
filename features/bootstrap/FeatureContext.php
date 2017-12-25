@@ -1,24 +1,21 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
+use Behat\Symfony2Extension\Context\KernelAwareContext;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Defines application features from the specific context.
  */
-class FeatureContext extends MinkContext implements Context
+class FeatureContext extends MinkContext implements Context, KernelAwareContext
 {
-    /**
-     * Initializes context.
-     *
-     * Every scenario gets its own context instance.
-     * You can also pass arbitrary arguments to the
-     * context constructor through behat.yml.
-     */
-    public function __construct()
+    /** @var KernelInterface */
+    protected $kernel;
+
+    public function setKernel(KernelInterface $kernel)
     {
+        $this->kernel = $kernel;
     }
 
     /**
@@ -26,7 +23,8 @@ class FeatureContext extends MinkContext implements Context
      */
     public function iAmAMemberOfTheCard($name)
     {
-        // TODO
+        $fakeApi = $this->kernel->getContainer()->get('test.' . App\Trello\Api::class);
+        $fakeApi->pretendToJoinCardWithName($name);
     }
 
     /**

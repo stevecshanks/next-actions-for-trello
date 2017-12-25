@@ -26,3 +26,15 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Trello\Api:
+        class: App\Trello\JsonApi
+        arguments:
+            - '@GuzzleHttp\Client'
+            - '@App\Trello\Auth'
+
+    GuzzleHttp\Client: ~
+
+    App\Trello\Auth:
+        arguments:
+            - '%env(TRELLO_API_KEY)%'
+            - '%env(TRELLO_API_TOKEN)%'

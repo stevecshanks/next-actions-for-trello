@@ -7,3 +7,7 @@ services:
     # aliases are prefixed with test. For example:
     #
     # test.App\Service\MyService: '@App\Service\MyService'
+    App\Trello\Api:
+        class: App\Trello\FakeJsonApi
+
+    test.App\Trello\Api: '@App\Trello\Api'

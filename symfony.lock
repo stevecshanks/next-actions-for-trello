@@ -14,9 +14,6 @@
     "behat/mink-extension": {
         "version": "2.3.0"
     },
-    "behat/mink-selenium2-driver": {
-        "version": "v1.3.1"
-    },
     "behat/symfony2-extension": {
         "version": "2.1",
         "recipe": {
@@ -64,9 +61,6 @@
     },
     "guzzlehttp/psr7": {
         "version": "1.4.2"
-    },
-    "instaclick/php-webdriver": {
-        "version": "1.4.5"
     },
     "psr/cache": {
         "version": "1.0.1"

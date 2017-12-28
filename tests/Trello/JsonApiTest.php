@@ -1,19 +1,39 @@
 <?php
 
+require_once('MockClientBuilder.php');
+
 use App\Trello\Auth;
 use App\Trello\JsonApi;
+use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
 
 class JsonApiTest extends TestCase
 {
+    public function testFetchCardsIAmAMemberOfMakesCorrectApiCall()
+    {
+        $container = [];
+        $client = (new MockClientBuilder())
+            ->withResponse(json_encode([]))
+            ->writeHistoryTo($container)
+            ->build();
+
+        $api = new JsonApi($client, new Auth('foo', 'bar'));
+        $api->fetchCardsIAmAMemberOf();
+
+        $this->assertCount(1, $container);
+        /** @var Request $request */
+        $request = $container[0]['request'];
+        $this->assertSame(
+            'https://api.trello.com/1/members/me/cards?key=foo&token=bar',
+            $request->getUri()->__toString()
+        );
+    }
+
     public function testFetchCardsIAmAMemberOfReturnsEmptyListIfNoCards()
     {
-        $response = new Response(200, [], json_encode([]));
-        $client = $this->createMockClientWithResponse($response);
+        $client = (new MockClientBuilder())
+            ->withResponse(json_encode([]))
+            ->build();
         $api = new JsonApi($client, new Auth('foo', 'bar'));
 
         $this->assertSame([], $api->fetchCardsIAmAMemberOf());
@@ -21,10 +41,8 @@ class JsonApiTest extends TestCase
 
     public function testFetchCardsIAmAMemberOfReturnsCorrectCards()
     {
-        $response = new Response(
-            200,
-            [],
-            json_encode([
+        $client = (new MockClientBuilder())
+            ->withResponse(json_encode([
                 [
                     'id' => '123abc',
                     'name' => 'Test 1'
@@ -33,9 +51,8 @@ class JsonApiTest extends TestCase
                     'id' => '456def',
                     'name' => 'Test 2'
                 ]
-            ])
-        );
-        $client = $this->createMockClientWithResponse($response);
+            ]))
+            ->build();
         $api = new JsonApi($client, new Auth('foo', 'bar'));
 
         $results = $api->fetchCardsIAmAMemberOf();
@@ -47,12 +64,5 @@ class JsonApiTest extends TestCase
 
         $this->assertSame('456def', $results[1]->getId());
         $this->assertSame('Test 2', $results[1]->getName());
-    }
-
-    protected function createMockClientWithResponse(Response $response): Client
-    {
-        $mockHandler = new MockHandler([$response]);
-        $handler = HandlerStack::create($mockHandler);
-        return new Client(['handler' => $handler]);
     }
 }

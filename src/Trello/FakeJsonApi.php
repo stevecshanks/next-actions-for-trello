@@ -10,22 +10,30 @@ use GuzzleHttp\Psr7\Response;
 class FakeJsonApi implements Api
 {
     /** @var string[] */
-    protected $joinedCards;
+    protected static $joinedCards = [];
+    /** @var string[] */
+    protected static $nextActionCards = [];
 
-    /**
-     * FakeJsonApi constructor.
-     */
-    public function __construct()
+    public static function reset()
     {
-        $this->joinedCards = [];
+        self::$joinedCards = [];
+        self::$nextActionCards = [];
     }
 
     /**
      * @param string $name
      */
-    public function pretendToJoinCardWithName(string $name)
+    public static function joinCard(string $name)
     {
-        $this->joinedCards[] = $name;
+        self::$joinedCards[] = $name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public static function addNextActionCard(string $name)
+    {
+        self::$nextActionCards[] = $name;
     }
 
     /**
@@ -34,7 +42,7 @@ class FakeJsonApi implements Api
     public function fetchCardsIAmAMemberOf(): array
     {
         $cards = [];
-        foreach ($this->joinedCards as $i => $name) {
+        foreach (self::$joinedCards as $i => $name) {
             $cards[] = [
                 'id' => "abcd{$i}",
                 'name' => $name

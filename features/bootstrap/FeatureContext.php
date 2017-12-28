@@ -1,21 +1,22 @@
 <?php
 
+use App\Trello\FakeJsonApi;
 use Behat\Behat\Context\Context;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Defines application features from the specific context.
  */
-class FeatureContext extends MinkContext implements Context, KernelAwareContext
+class FeatureContext extends MinkContext implements Context
 {
-    /** @var KernelInterface */
-    protected $kernel;
-
-    public function setKernel(KernelInterface $kernel)
+    /**
+     * @BeforeScenario
+     */
+    public function prepare(BeforeScenarioScope $scope)
     {
-        $this->kernel = $kernel;
+        // Make sure no cards are hanging around from a previous test
+        FakeJsonApi::reset();
     }
 
     /**
@@ -23,8 +24,15 @@ class FeatureContext extends MinkContext implements Context, KernelAwareContext
      */
     public function iAmAMemberOfTheCard($name)
     {
-        $fakeApi = $this->kernel->getContainer()->get('test.' . App\Trello\Api::class);
-        $fakeApi->pretendToJoinCardWithName($name);
+        FakeJsonApi::joinCard($name);
+    }
+
+    /**
+     * @Given I have a card :name on my Next Actions list
+     */
+    public function iHaveACardOnMyNextActionsList($name)
+    {
+        FakeJsonApi::addNextActionCard($name);
     }
 
     /**

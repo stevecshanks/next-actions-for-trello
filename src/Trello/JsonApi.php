@@ -35,6 +35,29 @@ class JsonApi implements Api
                 'key' => $this->auth->getKey(),
                 'token' => $this->auth->getToken()
             ]));
+        return $this->fetchCards($uri);
+    }
+
+    /**
+     * @param ListId $listId
+     * @return Card[]
+     */
+    public function fetchCardsOnList(ListId $listId): array
+    {
+        $uri = (new Uri("https://api.trello.com/1/lists/{$listId->getId()}/cards"))
+            ->withQuery(http_build_query([
+                'key' => $this->auth->getKey(),
+                'token' => $this->auth->getToken()
+            ]));
+        return $this->fetchCards($uri);
+    }
+
+    /**
+     * @param Uri $uri
+     * @return Card[]
+     */
+    protected function fetchCards(Uri $uri): array
+    {
         $response = $this->client->get($uri);
         $json = Json::fromString($response->getBody());
 
@@ -45,5 +68,4 @@ class JsonApi implements Api
             $json->decode()
         );
     }
-
 }

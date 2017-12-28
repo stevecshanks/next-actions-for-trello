@@ -2,7 +2,7 @@
 
 namespace App\Trello;
 
-require_once('tests/Trello/MockClientBuilder.php');
+require_once(__DIR__ . '/../../tests/Trello/MockClientBuilder.php');
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;

@@ -2,10 +2,13 @@
 
 namespace App\Trello;
 
+require_once('tests/Trello/MockClientBuilder.php');
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use MockClientBuilder;
 
 class FakeJsonApi implements Api
 {
@@ -41,22 +44,41 @@ class FakeJsonApi implements Api
      */
     public function fetchCardsIAmAMemberOf(): array
     {
+        $client = (new MockClientBuilder())
+            ->withResponse($this->buildJsonFromCardNames(self::$joinedCards))
+            ->build();
+        $jsonApi = new JsonApi($client, new Auth('', ''));
+
+        return $jsonApi->fetchCardsIAmAMemberOf();
+    }
+
+    /**
+     * @param ListId $listId
+     * @return Card[]
+     */
+    public function fetchCardsOnList(ListId $listId): array
+    {
+        $client = (new MockClientBuilder())
+            ->withResponse($this->buildJsonFromCardNames(self::$nextActionCards))
+            ->build();
+        $jsonApi = new JsonApi($client, new Auth('', ''));
+
+        return $jsonApi->fetchCardsOnList($listId);
+    }
+
+    /**
+     * @param string[] $names
+     * @return string
+     */
+    protected function buildJsonFromCardNames(array $names): string
+    {
         $cards = [];
-        foreach (self::$joinedCards as $i => $name) {
+        foreach ($names as $i => $name) {
             $cards[] = [
                 'id' => "abcd{$i}",
                 'name' => $name
             ];
         }
-
-        $response = new Response(200, [], json_encode($cards));
-
-        $mockHandler = new MockHandler([$response]);
-        $handler = HandlerStack::create($mockHandler);
-        $client = new Client(['handler' => $handler]);
-
-        $jsonApi = new JsonApi($client, new Auth('', ''));
-
-        return $jsonApi->fetchCardsIAmAMemberOf();
+        return json_encode($cards);
     }
 }

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Next Actions{% endblock %}
+
+{% block body %}
+    <ul>
+    {% for card in cards %}
+        <li>{{ card.name }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Trello\Api;
 use App\Trello\Card;
 use App\Trello\ListId;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ActionsController
+class ActionsController extends AbstractController
 {
     /**
+     * @Route("/")
      * @Route("/actions")
      *
      * @param Api $trelloApi
@@ -29,8 +31,6 @@ class ActionsController
             $listElements .= '<li>' . htmlspecialchars($card->getName()) . '</li>';
         }
 
-        return new Response(
-            "<html><body><ul>{$listElements}</ul></body></html>"
-        );
+        return $this->render('actions.html.twig', ['cards' => $cards]);
     }
 }

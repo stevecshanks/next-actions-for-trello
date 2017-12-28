@@ -2,10 +2,10 @@
 
 {% block title %}Next Actions{% endblock %}
 
-{% block body %}
-    <ul>
+{% block main %}
+    <div class="list-group">
     {% for card in cards %}
-        <li>{{ card.name }}</li>
+        <a href="#" class="list-group-item list-group-item-action">{{ card.name }}</a>
     {% endfor %}
-    </ul>
+    </div>
 {% endblock %}

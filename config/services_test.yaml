@@ -8,6 +8,6 @@ services:
     #
     # test.App\Service\MyService: '@App\Service\MyService'
     App\Trello\Api:
-        class: App\Trello\FakeJsonApi
+        class: App\Tests\Trello\FakeJsonApi
 
     test.App\Trello\Api: '@App\Trello\Api'

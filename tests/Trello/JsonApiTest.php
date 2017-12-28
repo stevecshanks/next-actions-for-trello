@@ -1,6 +1,6 @@
 <?php
 
-require_once('MockClientBuilder.php');
+namespace App\Tests\Trello;
 
 use App\Trello\Auth;
 use App\Trello\JsonApi;

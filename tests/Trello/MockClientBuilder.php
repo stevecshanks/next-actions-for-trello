@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Tests\Trello;
+
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;

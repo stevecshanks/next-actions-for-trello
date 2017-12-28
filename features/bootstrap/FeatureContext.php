@@ -1,6 +1,6 @@
 <?php
 
-use App\Trello\FakeJsonApi;
+use App\Tests\Trello\FakeJsonApi;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;

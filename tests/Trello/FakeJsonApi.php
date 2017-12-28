@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Trello;
+namespace App\Tests\Trello;
 
-require_once(__DIR__ . '/../../tests/Trello/MockClientBuilder.php');
-
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
-use MockClientBuilder;
+use App\Trello\Api;
+use App\Trello\Auth;
+use App\Trello\Card;
+use App\Trello\JsonApi;
+use App\Trello\ListId;
 
 class FakeJsonApi implements Api
 {

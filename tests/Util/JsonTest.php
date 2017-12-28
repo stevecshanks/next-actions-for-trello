@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\App\Tests\Util;
+namespace App\Tests\Util;
 
 use App\Util\Json;
 use InvalidArgumentException;

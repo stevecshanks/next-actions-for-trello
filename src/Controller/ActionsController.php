@@ -26,11 +26,6 @@ class ActionsController extends AbstractController
             $trelloApi->fetchCardsOnList(new ListId($_SERVER['TRELLO_NEXT_ACTIONS_LIST_ID']))
         );
 
-        $listElements = "";
-        foreach ($cards as $card) {
-            $listElements .= '<li>' . htmlspecialchars($card->getName()) . '</li>';
-        }
-
         return $this->render('actions.html.twig', ['cards' => $cards]);
     }
 }

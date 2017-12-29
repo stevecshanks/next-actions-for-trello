@@ -36,10 +36,35 @@ class FeatureContext extends MinkContext implements Context
     }
 
     /**
+     * @Given I have a project :name
+     */
+    public function iHaveAProject($name)
+    {
+        FakeJsonApi::addProject($name);
+    }
+
+    /**
+     * @Given :projectName has a Todo card :cardName
+     */
+    public function hasATodoCard($projectName, $cardName)
+    {
+        FakeJsonApi::addTodoCardToProject($projectName, $cardName);
+    }
+
+    /**
      * @Then I should see a Next Action :name
      */
     public function iShouldSeeANextAction($name)
     {
         $this->assertPageContainsText($name);
     }
+
+    /**
+     * @Then I should not see a Next Action :name
+     */
+    public function iShouldNotSeeANextAction($name)
+    {
+        $this->assertPageNotContainsText($name);
+    }
+
 }

@@ -14,11 +14,14 @@ class FakeJsonApi implements Api
     protected static $joinedCards = [];
     /** @var string[] */
     protected static $nextActionCards = [];
+    /** @var string[] */
+    protected static $todoCardsByProject = [];
 
     public static function reset()
     {
         self::$joinedCards = [];
         self::$nextActionCards = [];
+        self::$todoCardsByProject = [];
     }
 
     /**
@@ -35,6 +38,23 @@ class FakeJsonApi implements Api
     public static function addNextActionCard(string $name)
     {
         self::$nextActionCards[] = $name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public static function addProject(string $name)
+    {
+        self::$todoCardsByProject[$name] = [];
+    }
+
+    /**
+     * @param string $projectName
+     * @param string $cardName
+     */
+    public static function addTodoCardToProject(string $projectName, string $cardName)
+    {
+        self::$todoCardsByProject[$projectName][] = $cardName;
     }
 
     /**

@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
+use App\NextActionsLookup;
 use App\Trello\Api;
-use App\Trello\Card;
 use App\Trello\ListId;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,14 +18,11 @@ class ActionsController extends AbstractController
      * @param Api $trelloApi
      * @return Response
      */
-    public function list(Api $trelloApi)
+    public function list(Api $trelloApi): Response
     {
-        /** @var Card[] $cards */
-        $cards = array_merge(
-            $trelloApi->fetchCardsIAmAMemberOf(),
-            $trelloApi->fetchCardsOnList(new ListId($_SERVER['TRELLO_NEXT_ACTIONS_LIST_ID']))
-        );
+        $lookup = new NextActionsLookup($trelloApi, new ListId($_SERVER['TRELLO_NEXT_ACTIONS_LIST_ID']));
+        $nextActions = $lookup->lookup();
 
-        return $this->render('actions.html.twig', ['cards' => $cards]);
+        return $this->render('actions.html.twig', ['nextActions' => $nextActions]);
     }
 }

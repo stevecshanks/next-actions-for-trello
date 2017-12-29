@@ -4,8 +4,8 @@
 
 {% block main %}
     <div class="list-group">
-    {% for card in cards %}
-        <a href="#" class="list-group-item list-group-item-action">{{ card.name }}</a>
+    {% for action in nextActions %}
+        <a href="#" class="list-group-item list-group-item-action">{{ action.name }}</a>
     {% endfor %}
     </div>
 {% endblock %}

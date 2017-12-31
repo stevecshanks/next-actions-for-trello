@@ -47,7 +47,7 @@ class FakeJsonApi implements Api
      */
     public static function addProject(string $name)
     {
-        self::$todoCardsByProject[$name] = [];
+        self::$todoCardsByProject[md5($name)] = [];
     }
 
     /**
@@ -56,7 +56,7 @@ class FakeJsonApi implements Api
      */
     public static function addTodoCardToProject(string $projectName, string $cardName)
     {
-        self::$todoCardsByProject[$projectName][] = $cardName;
+        self::$todoCardsByProject[md5($projectName)][] = $cardName;
     }
 
     /**
@@ -78,8 +78,16 @@ class FakeJsonApi implements Api
      */
     public function fetchCardsOnList(ListId $listId): array
     {
+        if ($listId->getId() === $_SERVER['TRELLO_PROJECTS_LIST_ID']) {
+            $json = $this->buildJsonFromProjectNames();
+        } else {
+            $json = $this->buildJsonFromCardNames(
+                self::$todoCardsByProject[$listId->getId()] ?? self::$nextActionCards
+            );
+        }
+
         $client = (new MockClientBuilder())
-            ->withResponse($this->buildJsonFromCardNames(self::$nextActionCards))
+            ->withResponse($json)
             ->build();
         $jsonApi = new JsonApi($client, new Auth('', ''));
 
@@ -92,7 +100,23 @@ class FakeJsonApi implements Api
      */
     public function fetchListsOnBoard(BoardId $boardId): array
     {
-        return [];
+        if (isset(self::$todoCardsByProject[$boardId->getId()])) {
+            $json = json_encode([
+                [
+                    'id' => $boardId->getId(),
+                    'name' => 'Todo'
+                ]
+            ]);
+        } else {
+            $json = json_encode([]);
+        }
+
+        $client = (new MockClientBuilder())
+            ->withResponse($json)
+            ->build();
+        $jsonApi = new JsonApi($client, new Auth('', ''));
+
+        return $jsonApi->fetchListsOnBoard($boardId);
     }
 
     /**
@@ -105,9 +129,24 @@ class FakeJsonApi implements Api
         foreach ($names as $i => $name) {
             $cards[] = [
                 'id' => "abcd{$i}",
-                'name' => $name
+                'name' => $name,
+                'desc' => 'something'
             ];
         }
+        return json_encode($cards);
+    }
+
+    protected function buildJsonFromProjectNames(): string
+    {
+        $cards = [];
+        foreach (self::$todoCardsByProject as $id => $cardNames) {
+            $cards[] = [
+                'id' => $id,
+                'name' => "Project $id",
+                'desc' => 'https://trello.com/b/' . $id
+            ];
+        }
+
         return json_encode($cards);
     }
 }

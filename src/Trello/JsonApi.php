@@ -63,7 +63,8 @@ class JsonApi implements Api
 
         return array_map(
             function (stdClass $cardJson) {
-                return new Card($cardJson->id, $cardJson->name);
+                return (new Card($cardJson->id, $cardJson->name))
+                    ->withDescription($cardJson->desc);
             },
             $json->decode()
         );
@@ -75,6 +76,19 @@ class JsonApi implements Api
      */
     public function fetchListsOnBoard(BoardId $boardId): array
     {
-        return [];
+        $uri = (new Uri("https://api.trello.com/1/boards/{$boardId->getId()}/lists"))
+            ->withQuery(http_build_query([
+                'key' => $this->auth->getKey(),
+                'token' => $this->auth->getToken()
+            ]));
+        $response = $this->client->get($uri);
+        $json = Json::fromString($response->getBody());
+
+        return array_map(
+            function (stdClass $listJson) {
+                return new NamedList($listJson->id, $listJson->name);
+            },
+            $json->decode()
+        );
     }
 }

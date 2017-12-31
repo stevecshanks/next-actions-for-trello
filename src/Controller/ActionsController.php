@@ -20,7 +20,11 @@ class ActionsController extends AbstractController
      */
     public function list(Api $trelloApi): Response
     {
-        $lookup = new NextActionsLookup($trelloApi, new ListId($_SERVER['TRELLO_NEXT_ACTIONS_LIST_ID']));
+        $lookup = new NextActionsLookup(
+            $trelloApi,
+            new ListId($_SERVER['TRELLO_NEXT_ACTIONS_LIST_ID']),
+            new ListId($_SERVER['TRELLO_PROJECTS_LIST_ID'])
+        );
         $nextActions = $lookup->lookup();
 
         return $this->render('actions.html.twig', ['nextActions' => $nextActions]);

@@ -14,4 +14,10 @@ interface Api
      * @return Card[]
      */
     public function fetchCardsOnList(ListId $listId): array;
+
+    /**
+     * @param BoardId $boardId
+     * @return NamedList[]
+     */
+    public function fetchListsOnBoard(BoardId $boardId): array;
 }

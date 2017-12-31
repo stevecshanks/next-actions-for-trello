@@ -19,7 +19,7 @@ class Project
      * @param string $name
      * @param BoardId $boardId
      */
-    protected function __construct(string $name, BoardId $boardId)
+    public function __construct(string $name, BoardId $boardId)
     {
         $this->name = $name;
         $this->boardId = $boardId;

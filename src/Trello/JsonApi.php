@@ -68,4 +68,13 @@ class JsonApi implements Api
             $json->decode()
         );
     }
+
+    /**
+     * @param BoardId $boardId
+     * @return NamedList[]
+     */
+    public function fetchListsOnBoard(BoardId $boardId): array
+    {
+        return [];
+    }
 }

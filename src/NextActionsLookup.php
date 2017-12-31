@@ -12,16 +12,20 @@ class NextActionsLookup
     protected $api;
     /** @var ListId */
     protected $nextActionsListId;
+    /** @var ListId */
+    protected $projectsListId;
 
     /**
      * NextActionsLookup constructor.
      * @param Api $api
      * @param ListId $nextActionsListId
+     * @param ListId $projectsListId
      */
-    public function __construct(Api $api, ListId $nextActionsListId)
+    public function __construct(Api $api, ListId $nextActionsListId, ListId $projectsListId)
     {
         $this->api = $api;
         $this->nextActionsListId = $nextActionsListId;
+        $this->projectsListId = $projectsListId;
     }
 
     /**

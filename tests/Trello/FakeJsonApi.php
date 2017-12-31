@@ -4,6 +4,7 @@ namespace App\Tests\Trello;
 
 use App\Trello\Api;
 use App\Trello\Auth;
+use App\Trello\BoardId;
 use App\Trello\Card;
 use App\Trello\JsonApi;
 use App\Trello\ListId;
@@ -82,6 +83,15 @@ class FakeJsonApi implements Api
         $jsonApi = new JsonApi($client, new Auth('', ''));
 
         return $jsonApi->fetchCardsOnList($listId);
+    }
+
+    /**
+     * @param BoardId $boardId
+     * @return NamedList[]
+     */
+    public function fetchListsOnBoard(BoardId $boardId): array
+    {
+        return [];
     }
 
     /**

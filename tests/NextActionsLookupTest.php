@@ -3,7 +3,9 @@
 namespace App\Tests;
 
 use App\NextAction;
+use App\NextActionForProjectLookup;
 use App\NextActionsLookup;
+use App\Project;
 use App\Trello\Api;
 use App\Trello\Card;
 use App\Trello\ListId;
@@ -19,7 +21,12 @@ class NextActionsLookupTest extends TestCase
             new Card('', 'Test 2')
         ]);
 
-        $lookup = new NextActionsLookup($api, new ListId(''), new ListId(''));
+        $lookup = new NextActionsLookup(
+            $api,
+            $this->createMock(NextActionForProjectLookup::class),
+            new ListId(''),
+            new ListId('')
+        );
 
         $results = $lookup->lookup();
 
@@ -44,7 +51,12 @@ class NextActionsLookupTest extends TestCase
             }
         );
 
-        $lookup = new NextActionsLookup($api, new ListId('actions'), new ListId(''));
+        $lookup = new NextActionsLookup(
+            $api,
+            $this->createMock(NextActionForProjectLookup::class),
+            new ListId('actions'),
+            new ListId('')
+        );
 
         $results = $lookup->lookup();
 
@@ -56,11 +68,45 @@ class NextActionsLookupTest extends TestCase
 
     public function testItReturnsTheTopTodoCardOfEachProjectAsANextAction()
     {
-        $this->markTestIncomplete();
+        $api = $this->createMock(Api::class);
+        $api->method('fetchCardsOnList')->willReturnCallback(
+            function (ListId $listId) {
+                if ($listId->getId() === 'projects') {
+                    return [
+                        (new Card('', ''))->withDescription('https://trello.com/b/project1'),
+                        (new Card('', ''))->withDescription('https://trello.com/b/project2')
+                    ];
+                }
+                return [];
+            }
+        );
+
+        $nextActionForProjectLookup = $this->createMock(NextActionForProjectLookup::class);
+        $nextActionForProjectLookup->method('lookup')->willReturnCallback(
+            function (Project $project) {
+                switch ($project->getBoardId()->getId()) {
+                    case 'project1':
+                        return new NextAction(new Card('', 'Test 1'));
+                    case 'project2':
+                        return new NextAction(new Card('', 'Test 2'));
+                    default:
+                        return null;
+                }
+            }
+        );
+
+        $lookup = new NextActionsLookup(
+            $api,
+            $nextActionForProjectLookup,
+            new ListId(''),
+            new ListId('projects')
+        );
+
+        $results = $lookup->lookup();
 
         $this->assertCount(2, $results);
         $this->assertContainsOnlyInstancesOf(NextAction::class, $results);
-        $this->assertSame('Project 1 - Test 1', $results[0]->getName());
-        $this->assertSame('Project 2 - Test 2', $results[1]->getName());
+        $this->assertSame('Test 1', $results[0]->getName());
+        $this->assertSame('Test 2', $results[1]->getName());
     }
 }

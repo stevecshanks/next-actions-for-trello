@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\NextActionForProjectLookup;
 use App\NextActionsLookup;
 use App\Trello\Api;
 use App\Trello\ListId;
@@ -22,6 +23,7 @@ class ActionsController extends AbstractController
     {
         $lookup = new NextActionsLookup(
             $trelloApi,
+            new NextActionForProjectLookup($trelloApi),
             new ListId($_SERVER['TRELLO_NEXT_ACTIONS_LIST_ID']),
             new ListId($_SERVER['TRELLO_PROJECTS_LIST_ID'])
         );

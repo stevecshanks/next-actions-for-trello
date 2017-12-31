@@ -8,6 +8,7 @@ use App\Trello\BoardId;
 use App\Trello\Card;
 use App\Trello\JsonApi;
 use App\Trello\ListId;
+use App\Trello\NamedList;
 
 class FakeJsonApi implements Api
 {

@@ -8,6 +8,8 @@ class NextAction
 {
     /** @var Card */
     protected $card;
+    /** @var ?Project */
+    protected $project;
 
     /**
      * NextAction constructor.
@@ -26,5 +28,16 @@ class NextAction
     public function getUrl(): string
     {
         return $this->card->getUrl();
+    }
+
+    public function getProject(): ?Project
+    {
+        return $this->project;
+    }
+
+    public function forProject(Project $project): NextAction
+    {
+        $this->project = $project;
+        return $this;
     }
 }

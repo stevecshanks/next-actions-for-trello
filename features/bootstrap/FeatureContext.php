@@ -92,4 +92,12 @@ class FeatureContext extends MinkContext implements Context
             );
         }
     }
+
+    /**
+     * @Then I should see the project :name
+     */
+    public function iShouldSeeTheProject($name)
+    {
+        $this->assertPageContainsText($name);
+    }
 }

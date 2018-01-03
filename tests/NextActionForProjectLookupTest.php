@@ -75,6 +75,8 @@ class NextActionForProjectLookupTest extends TestCase
 
         $lookup = new NextActionForProjectLookup($api);
 
-        $this->assertSame('Test 1', $lookup->lookup($project)->getName());
+        $nextAction = $lookup->lookup($project);
+        $this->assertSame('Test 1', $nextAction->getName());
+        $this->assertSame($project, $nextAction->getProject());
     }
 }

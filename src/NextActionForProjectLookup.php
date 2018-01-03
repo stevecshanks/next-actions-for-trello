@@ -33,7 +33,12 @@ class NextActionForProjectLookup
 
         $todoCards = $this->api->fetchCardsOnList($todoList);
 
-        return empty($todoCards) ? null : new NextAction($todoCards[0]);
+        if (empty($todoCards)) {
+            return null;
+        }
+
+        return (new NextAction($todoCards[0]))
+            ->forProject($project);
     }
 
     protected function fetchTodoList(Project $project): ?NamedList

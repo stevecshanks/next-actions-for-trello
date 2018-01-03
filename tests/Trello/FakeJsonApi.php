@@ -18,12 +18,15 @@ class FakeJsonApi implements Api
     protected static $nextActionCards = [];
     /** @var string[] */
     protected static $todoCardsByProject = [];
+    /** @var string[] */
+    protected static $projectsById = [];
 
     public static function reset()
     {
         self::$joinedCards = [];
         self::$nextActionCards = [];
         self::$todoCardsByProject = [];
+        self::$projectsById = [];
     }
 
     /**
@@ -47,7 +50,8 @@ class FakeJsonApi implements Api
      */
     public static function addProject(string $name)
     {
-        self::$todoCardsByProject[md5($name)] = [];
+        self::$projectsById[self::cardNameToId($name)] = $name;
+        self::$todoCardsByProject[self::cardNameToId($name)] = [];
     }
 
     /**
@@ -56,7 +60,7 @@ class FakeJsonApi implements Api
      */
     public static function addTodoCardToProject(string $projectName, string $cardName)
     {
-        self::$todoCardsByProject[md5($projectName)][] = $cardName;
+        self::$todoCardsByProject[self::cardNameToId($projectName)][] = $cardName;
     }
 
     /**
@@ -152,12 +156,17 @@ class FakeJsonApi implements Api
         foreach (self::$todoCardsByProject as $id => $cardNames) {
             $cards[] = [
                 'id' => $id,
-                'name' => "Project $id",
+                'name' => self::$projectsById[$id],
                 'desc' => 'https://trello.com/b/' . $id,
                 'url' => 'http://some.url'
             ];
         }
 
         return json_encode($cards);
+    }
+
+    protected static function cardNameToId(string $name): string
+    {
+        return md5($name);
     }
 }

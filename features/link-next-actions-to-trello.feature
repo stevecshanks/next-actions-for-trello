@@ -7,3 +7,9 @@ Feature: Link Next Actions to Trello
     Given I have a card "Improve usability" on my Next Actions list
     When I click on "Improve usability"
     Then I should be taken to "Improve usability" on Trello
+
+  Scenario: See project name
+    Given I have a project "Improve usability"
+    And "Improve usability" has a Todo card "Show project name"
+    When I am on "/actions"
+    Then I should see the project "Improve usability"

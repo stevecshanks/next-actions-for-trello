@@ -37,6 +37,7 @@ class JsonApiTest extends TestCase
         foreach ($cards as $i => $card) {
             $this->assertSame($cards[$i]['id'], $results[$i]->getId());
             $this->assertSame($cards[$i]['name'], $results[$i]->getName());
+            $this->assertSame($cards[$i]['url'], $results[$i]->getUrl());
         }
     }
 
@@ -77,12 +78,14 @@ class JsonApiTest extends TestCase
             [
                 'id' => '123abc',
                 'name' => 'Test 1',
-                'desc' => "111"
+                'desc' => "111",
+                'url' => 'http://card1'
             ],
             [
                 'id' => '456def',
                 'name' => 'Test 2',
-                'desc' => '222'
+                'desc' => '222',
+                'url' => 'http://card2'
             ]
         ];
         return [

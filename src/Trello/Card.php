@@ -10,6 +10,8 @@ class Card
     protected $name;
     /** @var string */
     protected $description;
+    /** @var string */
+    protected $url;
 
     /**
      * Card constructor.
@@ -21,14 +23,6 @@ class Card
         $this->id = $id;
         $this->name = $name;
         $this->description = '';
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        return $this->description;
     }
 
     /**
@@ -48,12 +42,38 @@ class Card
     }
 
     /**
+     * @return string
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    /**
      * @param string $description
      * @return Card
      */
     public function withDescription(string $description): Card
     {
         $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @param string $url
+     * @return Card
+     */
+    public function withUrl(string $url): Card
+    {
+        $this->url = $url;
         return $this;
     }
 }

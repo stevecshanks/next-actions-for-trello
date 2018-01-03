@@ -153,7 +153,8 @@ class FakeJsonApi implements Api
             $cards[] = [
                 'id' => $id,
                 'name' => "Project $id",
-                'desc' => 'https://trello.com/b/' . $id
+                'desc' => 'https://trello.com/b/' . $id,
+                'url' => 'http://some.url'
             ];
         }
 

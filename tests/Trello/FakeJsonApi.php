@@ -120,6 +120,15 @@ class FakeJsonApi implements Api
     }
 
     /**
+     * @param string $cardName
+     * @return string
+     */
+    public static function generateFakeUrlForCard(string $cardName): string
+    {
+        return '/actions?testcard=' . urlencode($cardName);
+    }
+
+    /**
      * @param string[] $names
      * @return string
      */
@@ -130,7 +139,8 @@ class FakeJsonApi implements Api
             $cards[] = [
                 'id' => "abcd{$i}",
                 'name' => $name,
-                'desc' => 'something'
+                'desc' => 'something',
+                'url' => self::generateFakeUrlForCard($name)
             ];
         }
         return json_encode($cards);

@@ -3,6 +3,7 @@
 use App\Tests\Trello\FakeJsonApi;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
 
 /**
@@ -67,4 +68,28 @@ class FeatureContext extends MinkContext implements Context
         $this->assertPageNotContainsText($name);
     }
 
+    /**
+     * @When I click on :nextActionName
+     */
+    public function iClickOn($nextActionName)
+    {
+        $this->visit('/actions');
+        $this->clickLink($nextActionName);
+    }
+
+    /**
+     * @Then I should be taken to :cardName on Trello
+     */
+    public function iShouldBeTakenToOnTrello($cardName)
+    {
+        $currentUrl = $this->getSession()->getCurrentUrl();
+        $expectedUrl = FakeJsonApi::generateFakeUrlForCard($cardName);
+
+        if (strpos($currentUrl, $expectedUrl) === false) {
+            throw new ExpectationException(
+                "Could not find '$expectedUrl' in '$currentUrl'",
+                $this->getSession()
+            );
+        }
+    }
 }

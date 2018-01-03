@@ -25,7 +25,7 @@ class NextAction
         return $this->card->getName();
     }
 
-    public function getUrl(): string
+    public function getUrl(): ?string
     {
         return $this->card->getUrl();
     }

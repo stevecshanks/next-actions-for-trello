@@ -4,6 +4,7 @@ namespace App\Tests\Trello;
 
 use App\Trello\Auth;
 use App\Trello\BoardId;
+use App\Trello\Card;
 use App\Trello\JsonApi;
 use App\Trello\ListId;
 use GuzzleHttp\Psr7\Request;
@@ -24,20 +25,18 @@ class JsonApiTest extends TestCase
     /**
      * @dataProvider cardResponseProvider
      */
-    public function testFetchCardsIAmAMemberOfReturnsCorrectCards(array $cards)
+    public function testFetchCardsIAmAMemberOfReturnsCorrectCards(array $cardJsonArray)
     {
         $client = (new MockClientBuilder())
-            ->withResponse(json_encode($cards))
+            ->withResponse(json_encode($cardJsonArray))
             ->build();
         $api = new JsonApi($client, new Auth('foo', 'bar'));
 
         $results = $api->fetchCardsIAmAMemberOf();
 
-        $this->assertCount(count($cards), $results);
-        foreach ($cards as $i => $card) {
-            $this->assertSame($cards[$i]['id'], $results[$i]->getId());
-            $this->assertSame($cards[$i]['name'], $results[$i]->getName());
-            $this->assertSame($cards[$i]['url'], $results[$i]->getUrl());
+        $this->assertCount(count($cardJsonArray), $results);
+        foreach ($cardJsonArray as $i => $card) {
+            $this->assertCardMatchesJsonArray($cardJsonArray[$i], $results[$i]);
         }
     }
 
@@ -54,20 +53,18 @@ class JsonApiTest extends TestCase
     /**
      * @dataProvider cardResponseProvider
      */
-    public function testFetchCardsOnListReturnsCorrectCards(array $cards)
+    public function testFetchCardsOnListReturnsCorrectCards(array $cardJsonArray)
     {
         $client = (new MockClientBuilder())
-            ->withResponse(json_encode($cards))
+            ->withResponse(json_encode($cardJsonArray))
             ->build();
         $api = new JsonApi($client, new Auth('foo', 'bar'));
 
         $results = $api->fetchCardsOnList(new ListId(''));
 
-        $this->assertCount(count($cards), $results);
-        foreach ($cards as $i => $card) {
-            $this->assertSame($card['id'], $results[$i]->getId());
-            $this->assertSame($card['name'], $results[$i]->getName());
-            $this->assertSame($card['desc'], $results[$i]->getDescription());
+        $this->assertCount(count($cardJsonArray), $results);
+        foreach ($cardJsonArray as $i => $card) {
+            $this->assertCardMatchesJsonArray($cardJsonArray[$i], $results[$i]);
         }
     }
 
@@ -92,6 +89,14 @@ class JsonApiTest extends TestCase
             [$noCards],
             [$twoCards]
         ];
+    }
+
+    protected function assertCardMatchesJsonArray(array $json, Card $card)
+    {
+        $this->assertSame($json['id'], $card->getId());
+        $this->assertSame($json['name'], $card->getName());
+        $this->assertSame($json['desc'], $card->getDescription());
+        $this->assertSame($json['url'], $card->getUrl());
     }
 
     public function testFetchListsOnBoardMakesCorrectApiCall()

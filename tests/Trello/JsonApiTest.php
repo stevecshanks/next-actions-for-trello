@@ -35,8 +35,8 @@ class JsonApiTest extends TestCase
         $results = $api->fetchCardsIAmAMemberOf();
 
         $this->assertCount(count($cardJsonArray), $results);
-        foreach ($cardJsonArray as $i => $card) {
-            $this->assertCardMatchesJsonArray($cardJsonArray[$i], $results[$i]);
+        foreach ($cardJsonArray as $i => $cardJson) {
+            $this->assertCardMatchesJsonArray($cardJson, $results[$i]);
         }
     }
 
@@ -63,8 +63,8 @@ class JsonApiTest extends TestCase
         $results = $api->fetchCardsOnList(new ListId(''));
 
         $this->assertCount(count($cardJsonArray), $results);
-        foreach ($cardJsonArray as $i => $card) {
-            $this->assertCardMatchesJsonArray($cardJsonArray[$i], $results[$i]);
+        foreach ($cardJsonArray as $i => $cardJson) {
+            $this->assertCardMatchesJsonArray($cardJson, $results[$i]);
         }
     }
 

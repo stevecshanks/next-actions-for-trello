@@ -22,7 +22,7 @@ class NextActionForProjectLookup
 
     /**
      * @param Project $project
-     * @return NextAction|null ?NextAction
+     * @return NextAction|null
      */
     public function lookup(Project $project): ?NextAction
     {

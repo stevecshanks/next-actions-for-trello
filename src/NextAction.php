@@ -8,7 +8,7 @@ class NextAction
 {
     /** @var Card */
     protected $card;
-    /** @var ?Project */
+    /** @var Project|null */
     protected $project;
 
     /**

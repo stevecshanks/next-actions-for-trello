@@ -9,6 +9,8 @@ class DataSource
 {
     /** @var Card[] */
     protected $joinedCards;
+    /** @var Card[] */
+    protected $nextActionCards;
     /** @var Board[] */
     protected $boards;
 
@@ -18,6 +20,7 @@ class DataSource
     public function __construct()
     {
         $this->joinedCards = [];
+        $this->nextActionCards = [];
         $this->boards = [];
     }
 
@@ -27,6 +30,14 @@ class DataSource
     public function getJoinedCards(): array
     {
         return $this->joinedCards;
+    }
+
+    /**
+     * @return Card[]
+     */
+    public function getNextActionCards(): array
+    {
+        return $this->nextActionCards;
     }
 
     /**
@@ -45,5 +56,10 @@ class DataSource
     public function addBoard(Board $board)
     {
         $this->boards[$board->getId()] = $board;
+    }
+
+    public function addNextActionCard(Card $card)
+    {
+        $this->nextActionCards[] = $card;
     }
 }

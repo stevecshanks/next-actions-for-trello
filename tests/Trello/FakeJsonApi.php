@@ -104,10 +104,10 @@ class FakeJsonApi implements Api
     {
         if ($listId->getId() === $_SERVER['TRELLO_PROJECTS_LIST_ID']) {
             $json = $this->buildJsonFromProjectNames();
+        } elseif (isset(self::$todoCardsByProject[$listId->getId()])) {
+            $json = $this->buildJsonFromCardNames(self::$todoCardsByProject[$listId->getId()]);
         } else {
-            $json = $this->buildJsonFromCardNames(
-                self::$todoCardsByProject[$listId->getId()] ?? self::$nextActionCards
-            );
+            $json = $this->buildJsonForCards(self::$dataSource->getNextActionCards());
         }
 
         $client = (new MockClientBuilder())

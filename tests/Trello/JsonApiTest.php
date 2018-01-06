@@ -72,20 +72,8 @@ class JsonApiTest extends TestCase
     {
         $noCards = [];
         $twoCards = [
-            [
-                'id' => '123abc',
-                'name' => 'Test 1',
-                'desc' => "111",
-                'url' => 'http://card1',
-                'idBoard' => '987cba'
-            ],
-            [
-                'id' => '456def',
-                'name' => 'Test 2',
-                'desc' => '222',
-                'url' => 'http://card2',
-                'idBoard' => '654fed'
-            ]
+            (new CardJsonArrayBuilder('Test 1'))->build(),
+            (new CardJsonArrayBuilder('Test 2'))->build()
         ];
         return [
             [$noCards],

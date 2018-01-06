@@ -11,12 +11,12 @@ Feature: Link Next Actions to Trello
   Scenario: See project name for project Next Actions
     Given I have a project "Improve usability"
     And "Improve usability" has a Todo card "Show project name"
-    When I am on "/actions"
+    When I view my Next Actions list
     Then I should see the Project "Improve usability"
     And I should see a Next Action "Show project name"
 
   Scenario: See board name for Next Actions I am a member of
     Given I am a member of the card "See board name" on the board "Improve usability"
-    When I am on "/actions"
+    When I view my Next Actions list
     Then I should see the Project "Improve usability"
     And I should see a Next Action "See board name"

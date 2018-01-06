@@ -21,6 +21,15 @@ class FeatureContext extends MinkContext implements Context
     }
 
     /**
+     * @When I view my Next Actions list
+     */
+    public function iViewMyNextActionsList()
+    {
+        $this->visit("/actions");
+    }
+
+
+    /**
      * @Given I am a member of the card :name
      */
     public function iAmAMemberOfTheCard($name)

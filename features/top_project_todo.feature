@@ -7,6 +7,6 @@ Feature: See the cards at the top of each project todo list
     Given I have a project "Next Actions for Trello"
     And "Next Actions for Trello" has a Todo card "Set up Behat"
     And "Next Actions for Trello" has a Todo card "Set up Bootstrap"
-    When I am on "/actions"
+    When I view my Next Actions list
     Then I should see a Next Action "Set up Behat"
     And I should not see a Next Action "Set up Bootstrap"

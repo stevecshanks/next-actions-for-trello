@@ -76,27 +76,21 @@ class JsonApiTest extends TestCase
                 'id' => '123abc',
                 'name' => 'Test 1',
                 'desc' => "111",
-                'url' => 'http://card1'
+                'url' => 'http://card1',
+                'idBoard' => '987cba'
             ],
             [
                 'id' => '456def',
                 'name' => 'Test 2',
                 'desc' => '222',
-                'url' => 'http://card2'
+                'url' => 'http://card2',
+                'idBoard' => '654fed'
             ]
         ];
         return [
             [$noCards],
             [$twoCards]
         ];
-    }
-
-    protected function assertCardMatchesJsonArray(array $json, Card $card)
-    {
-        $this->assertSame($json['id'], $card->getId());
-        $this->assertSame($json['name'], $card->getName());
-        $this->assertSame($json['desc'], $card->getDescription());
-        $this->assertSame($json['url'], $card->getUrl());
     }
 
     public function testFetchListsOnBoardMakesCorrectApiCall()
@@ -148,6 +142,32 @@ class JsonApiTest extends TestCase
         ];
     }
 
+    public function testFetchBoardMakesCorrectApiCall()
+    {
+        $this->assertApiMethodMakesRequestToUrl(
+            function (JsonApi $api) {
+                $api->fetchBoard(new BoardId('123'));
+            },
+            'https://api.trello.com/1/boards/123?key=foo&token=bar'
+        );
+    }
+
+    public function testFetchBoardReturnsCorrectResult()
+    {
+        $client = (new MockClientBuilder())
+            ->withResponse(json_encode([
+                'id' => '123',
+                'name' => 'My Board'
+            ]))
+            ->build();
+        $api = new JsonApi($client, new Auth('foo', 'bar'));
+
+        $result = $api->fetchBoard(new BoardId('123'));
+
+        $this->assertSame('123', $result->getId());
+        $this->assertSame('My Board', $result->getName());
+    }
+
     protected function assertApiMethodMakesRequestToUrl(callable $callMethod, string $url)
     {
         $container = [];
@@ -166,5 +186,14 @@ class JsonApiTest extends TestCase
             $url,
             $request->getUri()->__toString()
         );
+    }
+
+    protected function assertCardMatchesJsonArray(array $json, Card $card)
+    {
+        $this->assertSame($json['id'], $card->getId());
+        $this->assertSame($json['name'], $card->getName());
+        $this->assertSame($json['desc'], $card->getDescription());
+        $this->assertSame($json['url'], $card->getUrl());
+        $this->assertSame($json['idBoard'], $card->getBoardId()->getId());
     }
 }

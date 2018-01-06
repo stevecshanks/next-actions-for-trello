@@ -7,7 +7,7 @@
     {% for action in nextActions %}
         <a href="{{ action.url }}" class="list-group-item list-group-item-action">
             {% if action.project %}
-                <h2>{{ action.project.name }}</h2> - 
+                <h2>{{ action.project.name }}</h2> -
             {% endif %}
             {{ action.name }}
         </a>

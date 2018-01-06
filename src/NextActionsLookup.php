@@ -41,19 +41,35 @@ class NextActionsLookup
      */
     public function lookup(): array
     {
-        $cards = array_merge(
-            $this->api->fetchCardsIAmAMemberOf(),
-            $this->api->fetchCardsOnList($this->nextActionsListId)
+        return array_merge(
+            $this->fetchNextActionsIAmAMemberOf(),
+            $this->fetchManuallyCreatedNextActions(),
+            $this->fetchProjectNextActions()
         );
+    }
 
-        $nextActionsFromCards = array_map(
+    protected function fetchNextActionsIAmAMemberOf()
+    {
+        return array_map(
+            function (Card $card) {
+                $project = Project::fromBoard(
+                    $this->api->fetchBoard($card->getBoardId())
+                );
+                return (new NextAction($card))
+                    ->forProject($project);
+            },
+            $this->api->fetchCardsIAmAMemberOf()
+        );
+    }
+
+    protected function fetchManuallyCreatedNextActions()
+    {
+        return array_map(
             function (Card $card) {
                 return new NextAction($card);
             },
-            $cards
+            $this->api->fetchCardsOnList($this->nextActionsListId)
         );
-
-        return array_merge($nextActionsFromCards, $this->fetchProjectNextActions());
     }
 
     protected function fetchProjectNextActions()

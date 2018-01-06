@@ -25,7 +25,7 @@ class FeatureContext extends MinkContext implements Context
      */
     public function iAmAMemberOfTheCard($name)
     {
-        FakeJsonApi::joinCard($name);
+        $this->iAmAMemberOfTheCardOnTheBoard($name, 'some board');
     }
 
     /**
@@ -94,10 +94,19 @@ class FeatureContext extends MinkContext implements Context
     }
 
     /**
-     * @Then I should see the project :name
+     * @Then I should see the Project :name
      */
     public function iShouldSeeTheProject($name)
     {
         $this->assertPageContainsText($name);
+    }
+
+    /**
+     * @Given I am a member of the card :cardName on the board :boardName
+     */
+    public function iAmAMemberOfTheCardOnTheBoard($cardName, $boardName)
+    {
+        FakeJsonApi::addBoard($boardName);
+        FakeJsonApi::joinCard($cardName);
     }
 }

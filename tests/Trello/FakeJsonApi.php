@@ -4,6 +4,7 @@ namespace App\Tests\Trello;
 
 use App\Trello\Api;
 use App\Trello\Auth;
+use App\Trello\Board;
 use App\Trello\BoardId;
 use App\Trello\Card;
 use App\Trello\JsonApi;
@@ -20,6 +21,8 @@ class FakeJsonApi implements Api
     protected static $todoCardsByProject = [];
     /** @var string[] */
     protected static $projectsById = [];
+    /** @var string[] */
+    protected static $boardsById = [];
 
     public static function reset()
     {
@@ -27,6 +30,7 @@ class FakeJsonApi implements Api
         self::$nextActionCards = [];
         self::$todoCardsByProject = [];
         self::$projectsById = [];
+        self::$boardsById = [];
     }
 
     /**
@@ -50,8 +54,8 @@ class FakeJsonApi implements Api
      */
     public static function addProject(string $name)
     {
-        self::$projectsById[self::cardNameToId($name)] = $name;
-        self::$todoCardsByProject[self::cardNameToId($name)] = [];
+        self::$projectsById[self::nameToId($name)] = $name;
+        self::$todoCardsByProject[self::nameToId($name)] = [];
     }
 
     /**
@@ -60,7 +64,15 @@ class FakeJsonApi implements Api
      */
     public static function addTodoCardToProject(string $projectName, string $cardName)
     {
-        self::$todoCardsByProject[self::cardNameToId($projectName)][] = $cardName;
+        self::$todoCardsByProject[self::nameToId($projectName)][] = $cardName;
+    }
+
+    /**
+     * @param string $name
+     */
+    public static function addBoard(string $name)
+    {
+        self::$boardsById[self::nameToId($name)] = $name;
     }
 
     /**
@@ -124,6 +136,29 @@ class FakeJsonApi implements Api
     }
 
     /**
+     * @param BoardId $boardId
+     * @return Board|null
+     */
+    public function fetchBoard(BoardId $boardId): ?Board
+    {
+        if (isset(self::$boardsById[$boardId->getId()])) {
+            $json = json_encode([
+                'id' => $boardId->getId(),
+                'name' => self::$boardsById[$boardId->getId()]
+            ]);
+        } else {
+            $json = json_encode(null);
+        }
+
+        $client = (new MockClientBuilder())
+            ->withResponse($json)
+            ->build();
+        $jsonApi = new JsonApi($client, new Auth('', ''));
+
+        return $jsonApi->fetchBoard($boardId);
+    }
+
+    /**
      * @param string $cardName
      * @return string
      */
@@ -144,7 +179,8 @@ class FakeJsonApi implements Api
                 'id' => "abcd{$i}",
                 'name' => $name,
                 'desc' => 'something',
-                'url' => self::generateFakeUrlForCard($name)
+                'url' => self::generateFakeUrlForCard($name),
+                'idBoard' => count(self::$boardsById) ? key(self::$boardsById) : '1'
             ];
         }
         return json_encode($cards);
@@ -158,14 +194,15 @@ class FakeJsonApi implements Api
                 'id' => $id,
                 'name' => self::$projectsById[$id],
                 'desc' => 'https://trello.com/b/' . $id,
-                'url' => 'http://some.url'
+                'url' => 'http://some.url',
+                'idBoard' => '1'
             ];
         }
 
         return json_encode($cards);
     }
 
-    protected static function cardNameToId(string $name): string
+    protected static function nameToId(string $name): string
     {
         return md5($name);
     }

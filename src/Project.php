@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Trello\Board;
 use App\Trello\BoardId;
 use App\Trello\Card;
 use App\Util\Regex;
@@ -39,6 +40,15 @@ class Project
         }
 
         return new Project($card->getName(), new BoardId($matches[1]));
+    }
+
+    /**
+     * @param Board $board
+     * @return Project
+     */
+    public static function fromBoard(Board $board): Project
+    {
+        return new Project($board->getName(), $board);
     }
 
     /**

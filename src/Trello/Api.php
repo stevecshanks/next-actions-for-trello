@@ -20,4 +20,10 @@ interface Api
      * @return NamedList[]
      */
     public function fetchListsOnBoard(BoardId $boardId): array;
+
+    /**
+     * @param BoardId $boardId
+     * @return Board|null
+     */
+    public function fetchBoard(BoardId $boardId): ?Board;
 }

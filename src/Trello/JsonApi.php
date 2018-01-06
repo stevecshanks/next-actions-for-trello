@@ -53,6 +53,28 @@ class JsonApi implements Api
     }
 
     /**
+     * @param BoardId $boardId
+     * @return Board|null
+     */
+    public function fetchBoard(BoardId $boardId): ?Board
+    {
+        $uri = (new Uri("https://api.trello.com/1/boards/{$boardId->getId()}"))
+            ->withQuery(http_build_query([
+                'key' => $this->auth->getKey(),
+                'token' => $this->auth->getToken()
+            ]));
+        $response = $this->client->get($uri);
+        $json = Json::fromString($response->getBody());
+
+        $boardJson = $json->decode();
+        if ($boardJson) {
+            return new Board($boardJson->id, $boardJson->name);
+        }
+
+        return null;
+    }
+
+    /**
      * @param Uri $uri
      * @return Card[]
      */
@@ -65,7 +87,8 @@ class JsonApi implements Api
             function (stdClass $cardJson) {
                 return (new Card($cardJson->id, $cardJson->name))
                     ->withDescription($cardJson->desc)
-                    ->withUrl($cardJson->url);
+                    ->withUrl($cardJson->url)
+                    ->withBoardId(new BoardId($cardJson->idBoard));
             },
             $json->decode()
         );

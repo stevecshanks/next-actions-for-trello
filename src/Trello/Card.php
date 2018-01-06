@@ -12,6 +12,8 @@ class Card
     protected $description;
     /** @var string */
     protected $url;
+    /** @var BoardId */
+    protected $boardId;
 
     /**
      * Card constructor.
@@ -22,7 +24,6 @@ class Card
     {
         $this->id = $id;
         $this->name = $name;
-        $this->description = '';
     }
 
     /**
@@ -42,7 +43,7 @@ class Card
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getDescription(): ?string
     {
@@ -50,11 +51,19 @@ class Card
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getUrl(): ?string
     {
         return $this->url;
+    }
+
+    /**
+     * @return BoardId|null
+     */
+    public function getBoardId(): ?BoardId
+    {
+        return $this->boardId;
     }
 
     /**
@@ -74,6 +83,16 @@ class Card
     public function withUrl(string $url): Card
     {
         $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * @param BoardId $boardId
+     * @return Card
+     */
+    public function withBoardId(BoardId $boardId): Card
+    {
+        $this->boardId = $boardId;
         return $this;
     }
 }

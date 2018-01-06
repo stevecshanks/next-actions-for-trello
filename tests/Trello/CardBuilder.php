@@ -2,7 +2,11 @@
 
 namespace App\Tests\Trello;
 
-class CardJsonArrayBuilder
+use App\Trello\Board;
+use App\Trello\BoardId;
+use App\Trello\Card;
+
+class CardBuilder
 {
     /** @var string */
     protected $id;
@@ -29,7 +33,7 @@ class CardJsonArrayBuilder
         $this->boardId = md5("board-{$this->name}");
     }
 
-    public function build(): array
+    public function buildJsonArray(): array
     {
         return [
             'id' => $this->id,
@@ -40,27 +44,41 @@ class CardJsonArrayBuilder
         ];
     }
 
-    public function withId(string $id): CardJsonArrayBuilder
+    public function buildCard(): Card
+    {
+        return (new Card($this->id, $this->name))
+            ->withDescription($this->description)
+            ->withUrl($this->url)
+            ->withBoardId(new BoardId($this->boardId));
+    }
+
+    public function withId(string $id): CardBuilder
     {
         $this->id = $id;
         return $this;
     }
 
-    public function withUrl(string $url): CardJsonArrayBuilder
+    public function withUrl(string $url): CardBuilder
     {
         $this->url = $url;
         return $this;
     }
 
-    public function withDescription(string $description): CardJsonArrayBuilder
+    public function withDescription(string $description): CardBuilder
     {
         $this->description = $description;
         return $this;
     }
 
-    public function withBoardId(string $boardId): CardJsonArrayBuilder
+    public function withBoardId(string $boardId): CardBuilder
     {
         $this->boardId = $boardId;
+        return $this;
+    }
+
+    public function linkedToProject(string $projectId): CardBuilder
+    {
+        $this->description = "https://trello.com/b/{$projectId}";
         return $this;
     }
 }

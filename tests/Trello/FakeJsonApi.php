@@ -175,12 +175,12 @@ class FakeJsonApi implements Api
     {
         $cards = [];
         foreach ($names as $i => $name) {
-            $builder = (new CardJsonArrayBuilder($name))
+            $builder = (new CardBuilder($name))
                 ->withUrl(self::generateFakeUrlForCard($name));
             if (!empty(self::$boardsById)) {
                 $builder = $builder->withBoardId(key(self::$boardsById));
             }
-            $cards[] = $builder->build();
+            $cards[] = $builder->buildJsonArray();
         }
         return json_encode($cards);
     }
@@ -189,10 +189,9 @@ class FakeJsonApi implements Api
     {
         $cards = [];
         foreach (self::$todoCardsByProject as $id => $cardNames) {
-            $cards[] = (new CardJsonArrayBuilder(self::$projectsById[$id]))
-                ->withId($id)
-                ->withDescription("https://trello.com/b/{$id}")
-                ->build();
+            $cards[] = (new CardBuilder(self::$projectsById[$id]))
+                ->linkedToProject($id)
+                ->buildJsonArray();
         }
 
         return json_encode($cards);

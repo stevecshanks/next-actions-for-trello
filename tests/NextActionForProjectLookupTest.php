@@ -4,9 +4,9 @@ namespace App\Tests;
 
 use App\NextActionForProjectLookup;
 use App\Project;
+use App\Tests\Trello\CardBuilder;
 use App\Trello\Api;
 use App\Trello\BoardId;
-use App\Trello\Card;
 use App\Trello\ListId;
 use App\Trello\NamedList;
 use InvalidArgumentException;
@@ -65,8 +65,8 @@ class NextActionForProjectLookupTest extends TestCase
             function (ListId $listId) {
                 if ($listId->getId() === 'todo') {
                     return [
-                        new Card('', 'Test 1'),
-                        new Card('', 'Test 2')
+                        (new CardBuilder('Test 1'))->buildCard(),
+                        (new CardBuilder('Test 2'))->buildCard()
                     ];
                 }
                 return [];

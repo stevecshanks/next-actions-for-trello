@@ -6,10 +6,10 @@ use App\NextAction;
 use App\NextActionForProjectLookup;
 use App\NextActionsLookup;
 use App\Project;
+use App\Tests\Trello\CardBuilder;
 use App\Trello\Api;
 use App\Trello\Board;
 use App\Trello\BoardId;
-use App\Trello\Card;
 use App\Trello\ListId;
 use PHPUnit\Framework\TestCase;
 
@@ -19,8 +19,8 @@ class NextActionsLookupTest extends TestCase
     {
         $api = $this->createMock(Api::class);
         $api->method('fetchCardsIAmAMemberOf')->willReturn([
-            (new Card('123', 'Test 1'))->withBoardId(new BoardId('abc')),
-            (new Card('456', 'Test 2'))->withBoardId(new BoardId('def'))
+            (new CardBuilder('Test 1'))->withBoardId('abc')->buildCard(),
+            (new CardBuilder('Test 2'))->withBoardId('def')->buildCard()
         ]);
         $api->method('fetchBoard')->willReturnCallback(
             function (BoardId $boardId) {
@@ -59,8 +59,8 @@ class NextActionsLookupTest extends TestCase
             function (ListId $listId) {
                 if ($listId->getId() === 'actions') {
                     return [
-                        new Card('', 'Test 1'),
-                        new Card('', 'Test 2')
+                        (new CardBuilder('Test 1'))->buildCard(),
+                        (new CardBuilder('Test 2'))->buildCard()
                     ];
                 }
                 return [];
@@ -89,8 +89,8 @@ class NextActionsLookupTest extends TestCase
             function (ListId $listId) {
                 if ($listId->getId() === 'projects') {
                     return [
-                        (new Card('', ''))->withDescription('https://trello.com/b/project1'),
-                        (new Card('', ''))->withDescription('https://trello.com/b/project2')
+                        (new CardBuilder(''))->linkedToProject('project1')->buildCard(),
+                        (new CardBuilder(''))->linkedToProject('project2')->buildCard()
                     ];
                 }
                 return [];
@@ -102,9 +102,9 @@ class NextActionsLookupTest extends TestCase
             function (Project $project) {
                 switch ($project->getBoardId()->getId()) {
                     case 'project1':
-                        return new NextAction(new Card('', 'Test 1'));
+                        return new NextAction((new CardBuilder('Test 1'))->buildCard());
                     case 'project2':
-                        return new NextAction(new Card('', 'Test 2'));
+                        return new NextAction((new CardBuilder('Test 2'))->buildCard());
                     default:
                         return null;
                 }

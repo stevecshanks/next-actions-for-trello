@@ -3,7 +3,7 @@
 namespace App\Tests;
 
 use App\Project;
-use App\Trello\Card;
+use App\Tests\Trello\CardBuilder;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +15,7 @@ class ProjectTest extends TestCase
     public function testFromCardThrowsExceptionIfBoardIdCannotBeParsed(string $description)
     {
         $this->expectException(InvalidArgumentException::class);
-        $card = (new Card('', ''))->withDescription($description);
+        $card = (new CardBuilder(''))->withDescription($description)->buildCard();
 
         Project::fromCard($card);
     }
@@ -34,7 +34,7 @@ class ProjectTest extends TestCase
      */
     public function testFromCardCreatesCorrectProject(string $description, string $expectedBoardId)
     {
-        $card = (new Card('', 'My Project'))->withDescription($description);
+        $card = (new CardBuilder('My Project'))->withDescription($description)->buildCard();
 
         $project = Project::fromCard($card);
 

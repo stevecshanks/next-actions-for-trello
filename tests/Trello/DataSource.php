@@ -3,6 +3,7 @@
 namespace App\Tests\Trello;
 
 use App\Trello\Board;
+use App\Trello\BoardId;
 use App\Trello\Card;
 
 class DataSource
@@ -51,7 +52,8 @@ class DataSource
      */
     public function getProjectCards(): array
     {
-        return $this->projectCards;
+        // Only return values or our project card list will be encoded as a JSON dictionary and not an array
+        return array_values($this->projectCards);
     }
 
     /**
@@ -84,20 +86,22 @@ class DataSource
 
     public function addTodoCard(Card $card)
     {
-        if (!isset($this->todoCards[$card->getBoardId()->getId()])) {
-            $this->todoCards[$card->getBoardId()->getId()] = [];
+        // In these tests, the board and list ids will be the same
+        $listOrBoardId = $card->getBoardId()->getId();
+        if (!isset($this->todoCards[$listOrBoardId])) {
+            $this->todoCards[$listOrBoardId] = [];
         }
-        $this->todoCards[$card->getBoardId()->getId()][] = $card;
+        $this->todoCards[$listOrBoardId][] = $card;
     }
 
-    public function getBoardById(string $id): ?Board
+    public function getBoardById(BoardId $boardId): ?Board
     {
-        return $this->boards[$id] ?? null;
+        return $this->boards[$boardId->getId()] ?? null;
     }
 
-    public function getCardsOnList(string $listId)
+    public function getCardsOnTodoList(string $listOrBoardId)
     {
         // In these tests, the board and list ids will be the same
-        return $this->todoCards[$listId];
+        return $this->todoCards[$listOrBoardId] ?? [];
     }
 }

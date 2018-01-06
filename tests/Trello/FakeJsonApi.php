@@ -13,11 +13,6 @@ use App\Trello\NamedList;
 
 class FakeJsonApi implements Api
 {
-    /** @var string[] */
-    protected static $todoCardsByProject = [];
-    /** @var string[] */
-    protected static $projectsById = [];
-
     /** @var DataSource */
     protected static $dataSource;
 
@@ -26,31 +21,7 @@ class FakeJsonApi implements Api
         self::$dataSource = $dataSource;
     }
 
-    public static function reset()
-    {
-        self::$todoCardsByProject = [];
-        self::$projectsById = [];
-    }
-
-    /**
-     * @param string $name
-     */
-    public static function addProject(string $name)
-    {
-        self::$projectsById[self::nameToId($name)] = $name;
-        self::$todoCardsByProject[self::nameToId($name)] = [];
-    }
-
-    /**
-     * @param string $projectName
-     * @param string $cardName
-     */
-    public static function addTodoCardToProject(string $projectName, string $cardName)
-    {
-        self::$todoCardsByProject[self::nameToId($projectName)][] = $cardName;
-    }
-
-    /**
+     /**
      * @return Card[]
      */
     public function fetchCardsIAmAMemberOf(): array
@@ -70,11 +41,17 @@ class FakeJsonApi implements Api
     public function fetchCardsOnList(ListId $listId): array
     {
         if ($listId->getId() === $_SERVER['TRELLO_PROJECTS_LIST_ID']) {
-            $json = $this->buildJsonFromProjectNames();
-        } elseif (isset(self::$todoCardsByProject[$listId->getId()])) {
-            $json = $this->buildJsonFromCardNames(self::$todoCardsByProject[$listId->getId()]);
+            $json = $this->buildJsonForCards(
+                self::$dataSource->getProjectCards()
+            );
+        } elseif ($listId->getId() === $_SERVER['TRELLO_NEXT_ACTIONS_LIST_ID']) {
+            $json = $this->buildJsonForCards(
+                self::$dataSource->getNextActionCards()
+            );
         } else {
-            $json = $this->buildJsonForCards(self::$dataSource->getNextActionCards());
+            $json = $this->buildJsonForCards(
+                self::$dataSource->getCardsOnTodoList($listId->getId())
+            );
         }
 
         $client = (new MockClientBuilder())
@@ -91,7 +68,8 @@ class FakeJsonApi implements Api
      */
     public function fetchListsOnBoard(BoardId $boardId): array
     {
-        if (isset(self::$todoCardsByProject[$boardId->getId()])) {
+        $board = self::$dataSource->getBoardById($boardId);
+        if ($board instanceof Board && !empty(self::$dataSource->getCardsOnTodoList($boardId->getId()))) {
             $json = json_encode([
                 [
                     'id' => $boardId->getId(),
@@ -116,7 +94,7 @@ class FakeJsonApi implements Api
      */
     public function fetchBoard(BoardId $boardId): ?Board
     {
-        $board = self::$dataSource->getBoardById($boardId->getId());
+        $board = self::$dataSource->getBoardById($boardId);
         if ($board instanceof Board) {
             $json = json_encode([
                 'id' => $board->getId(),
@@ -134,23 +112,6 @@ class FakeJsonApi implements Api
         return $jsonApi->fetchBoard($boardId);
     }
 
-    /**
-     * @param string[] $names
-     * @return string
-     */
-    protected function buildJsonFromCardNames(array $names): string
-    {
-        $cards = [];
-        foreach ($names as $i => $name) {
-            $builder = (new CardBuilder($name));
-            if (!empty(self::$boardsById)) {
-                $builder = $builder->withBoardId(key(self::$boardsById));
-            }
-            $cards[] = $builder->buildJsonArray();
-        }
-        return json_encode($cards);
-    }
-
     protected function buildJsonForCards(array $cards): string
     {
         $cardsAsArrays = array_map(
@@ -166,22 +127,5 @@ class FakeJsonApi implements Api
             $cards
         );
         return json_encode($cardsAsArrays);
-    }
-
-    protected function buildJsonFromProjectNames(): string
-    {
-        $cards = [];
-        foreach (self::$todoCardsByProject as $id => $cardNames) {
-            $cards[] = (new CardBuilder(self::$projectsById[$id]))
-                ->linkedToProject($id)
-                ->buildJsonArray();
-        }
-
-        return json_encode($cards);
-    }
-
-    protected static function nameToId(string $name): string
-    {
-        return md5($name);
     }
 }

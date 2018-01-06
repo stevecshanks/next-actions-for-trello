@@ -9,8 +9,7 @@ Feature: Link Next Actions to Trello
     Then I should be taken to "Improve usability" on Trello
 
   Scenario: See project name for project Next Actions
-    Given I have a project "Improve usability"
-    And "Improve usability" has a Todo card "Show project name"
+    Given I have a project "Improve usability" with a Todo card "Show project name"
     When I view my Next Actions list
     Then I should see the Project "Improve usability"
     And I should see a Next Action "Show project name"

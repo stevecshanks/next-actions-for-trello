@@ -21,9 +21,6 @@ class FeatureContext extends MinkContext implements Context
      */
     public function prepare(BeforeScenarioScope $scope)
     {
-        // Make sure no cards are hanging around from a previous test
-        FakeJsonApi::reset();
-
         $this->fakeApiData = new DataSource();
         FakeJsonApi::setDataSource($this->fakeApiData);
     }
@@ -54,23 +51,10 @@ class FeatureContext extends MinkContext implements Context
     }
 
     /**
-     * @Given I have a project :name
+     * @Given I have a project :projectName with a Todo card :cardName
      */
-    public function iHaveAProject($name)
+    public function iHaveAProjectWithATodoCard($projectName, $cardName)
     {
-        FakeJsonApi::addProject($name);
-        // FIXME Do nothing, then refactor steps
-    }
-
-    /**
-     * @Given :projectName has a Todo card :cardName
-     */
-    public function hasATodoCard($projectName, $cardName)
-    {
-        // FIXME RENAME ME ^^^^
-
-        FakeJsonApi::addTodoCardToProject($projectName, $cardName);
-
         $board = new Board(md5($projectName), $projectName);
         $projectCard = (new CardBuilder($projectName))
             ->linkedToProject($board->getId())

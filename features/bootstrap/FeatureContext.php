@@ -3,7 +3,6 @@
 use App\Tests\Trello\FakeJsonApi;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
 
 /**
@@ -94,12 +93,7 @@ class FeatureContext extends MinkContext implements Context
         $currentUrl = $this->getSession()->getCurrentUrl();
         $expectedUrl = FakeJsonApi::generateFakeUrlForCard($cardName);
 
-        if (strpos($currentUrl, $expectedUrl) === false) {
-            throw new ExpectationException(
-                "Could not find '$expectedUrl' in '$currentUrl'",
-                $this->getSession()
-            );
-        }
+        assert(strpos($currentUrl, $expectedUrl) !== false);
     }
 
     /**

@@ -14,15 +14,9 @@ use App\Trello\NamedList;
 class FakeJsonApi implements Api
 {
     /** @var string[] */
-    protected static $joinedCards = [];
-    /** @var string[] */
-    protected static $nextActionCards = [];
-    /** @var string[] */
     protected static $todoCardsByProject = [];
     /** @var string[] */
     protected static $projectsById = [];
-    /** @var string[] */
-    protected static $boardsById = [];
 
     /** @var DataSource */
     protected static $dataSource;
@@ -34,27 +28,8 @@ class FakeJsonApi implements Api
 
     public static function reset()
     {
-        self::$joinedCards = [];
-        self::$nextActionCards = [];
         self::$todoCardsByProject = [];
         self::$projectsById = [];
-        self::$boardsById = [];
-    }
-
-    /**
-     * @param string $name
-     */
-    public static function joinCard(string $name)
-    {
-        self::$joinedCards[] = $name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public static function addNextActionCard(string $name)
-    {
-        self::$nextActionCards[] = $name;
     }
 
     /**
@@ -73,14 +48,6 @@ class FakeJsonApi implements Api
     public static function addTodoCardToProject(string $projectName, string $cardName)
     {
         self::$todoCardsByProject[self::nameToId($projectName)][] = $cardName;
-    }
-
-    /**
-     * @param string $name
-     */
-    public static function addBoard(string $name)
-    {
-        self::$boardsById[self::nameToId($name)] = $name;
     }
 
     /**
@@ -168,15 +135,6 @@ class FakeJsonApi implements Api
     }
 
     /**
-     * @param string $cardName
-     * @return string
-     */
-    public static function generateFakeUrlForCard(string $cardName): string
-    {
-        return '/actions?testcard=' . urlencode($cardName);
-    }
-
-    /**
      * @param string[] $names
      * @return string
      */
@@ -184,8 +142,7 @@ class FakeJsonApi implements Api
     {
         $cards = [];
         foreach ($names as $i => $name) {
-            $builder = (new CardBuilder($name))
-                ->withUrl(self::generateFakeUrlForCard($name));
+            $builder = (new CardBuilder($name));
             if (!empty(self::$boardsById)) {
                 $builder = $builder->withBoardId(key(self::$boardsById));
             }

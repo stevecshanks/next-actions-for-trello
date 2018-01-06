@@ -62,4 +62,9 @@ class DataSource
     {
         $this->nextActionCards[] = $card;
     }
+
+    public function getBoardById(string $id): ?Board
+    {
+        return $this->boards[$id] ?? null;
+    }
 }

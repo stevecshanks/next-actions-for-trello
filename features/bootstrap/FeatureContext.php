@@ -33,8 +33,6 @@ class FeatureContext extends MinkContext implements Context
      */
     public function iAmAMemberOfTheCardOnTheBoard($cardName, $boardName = 'some board')
     {
-        FakeJsonApi::addBoard($boardName);
-
         $board = new Board(md5($boardName), $boardName);
         $card = (new CardBuilder($cardName))
             ->withBoardId($board->getId())

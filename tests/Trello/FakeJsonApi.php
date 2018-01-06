@@ -149,13 +149,14 @@ class FakeJsonApi implements Api
      */
     public function fetchBoard(BoardId $boardId): ?Board
     {
-        if (isset(self::$boardsById[$boardId->getId()])) {
+        $board = self::$dataSource->getBoardById($boardId->getId());
+        if ($board instanceof Board) {
             $json = json_encode([
-                'id' => $boardId->getId(),
-                'name' => self::$boardsById[$boardId->getId()]
+                'id' => $board->getId(),
+                'name' => $board->getName()
             ]);
         } else {
-            $json = json_encode(null);
+            $json = null;
         }
 
         $client = (new MockClientBuilder())

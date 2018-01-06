@@ -2,8 +2,6 @@
 
 namespace App\Tests\Trello;
 
-use App\Trello\Board;
-use App\Trello\BoardId;
 use App\Trello\Card;
 
 class CardBuilder
@@ -46,10 +44,7 @@ class CardBuilder
 
     public function buildCard(): Card
     {
-        return (new Card($this->id, $this->name))
-            ->withDescription($this->description)
-            ->withUrl($this->url)
-            ->withBoardId(new BoardId($this->boardId));
+        return Card::fromJson((object)$this->buildJsonArray());
     }
 
     public function withId(string $id): CardBuilder

@@ -85,10 +85,7 @@ class JsonApi implements Api
 
         return array_map(
             function (stdClass $cardJson) {
-                return (new Card($cardJson->id, $cardJson->name))
-                    ->withDescription($cardJson->desc)
-                    ->withUrl($cardJson->url)
-                    ->withBoardId(new BoardId($cardJson->idBoard));
+                return Card::fromJson($cardJson);
             },
             $json->decode()
         );

@@ -2,6 +2,8 @@
 
 namespace App\Trello;
 
+use stdClass;
+
 class Card
 {
     /** @var string */
@@ -19,11 +21,28 @@ class Card
      * Card constructor.
      * @param string $id
      * @param string $name
+     * @param string $description
+     * @param string $url
+     * @param BoardId $boardId
      */
-    public function __construct(string $id, string $name)
+    protected function __construct(string $id, string $name, string $description, string $url, BoardId $boardId)
     {
         $this->id = $id;
         $this->name = $name;
+        $this->description = $description;
+        $this->url = $url;
+        $this->boardId = $boardId;
+    }
+
+    public static function fromJson(stdClass $json)
+    {
+        return new static(
+            $json->id,
+            $json->name,
+            $json->desc,
+            $json->url,
+            new BoardId($json->idBoard)
+        );
     }
 
     /**
@@ -43,56 +62,26 @@ class Card
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
         return $this->description;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getUrl(): ?string
+    public function getUrl(): string
     {
         return $this->url;
     }
 
     /**
-     * @return BoardId|null
+     * @return BoardId
      */
-    public function getBoardId(): ?BoardId
+    public function getBoardId(): BoardId
     {
         return $this->boardId;
-    }
-
-    /**
-     * @param string $description
-     * @return Card
-     */
-    public function withDescription(string $description): Card
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    /**
-     * @param string $url
-     * @return Card
-     */
-    public function withUrl(string $url): Card
-    {
-        $this->url = $url;
-        return $this;
-    }
-
-    /**
-     * @param BoardId $boardId
-     * @return Card
-     */
-    public function withBoardId(BoardId $boardId): Card
-    {
-        $this->boardId = $boardId;
-        return $this;
     }
 }

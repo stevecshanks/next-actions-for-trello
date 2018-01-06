@@ -11,8 +11,12 @@ class DataSource
     protected $joinedCards;
     /** @var Card[] */
     protected $nextActionCards;
+    /** @var Card[] */
+    protected $projectCards;
     /** @var Board[] */
     protected $boards;
+    /** Card[][] */
+    protected $todoCards;
 
     /**
      * DataSource constructor.
@@ -21,7 +25,9 @@ class DataSource
     {
         $this->joinedCards = [];
         $this->nextActionCards = [];
+        $this->projectCards = [];
         $this->boards = [];
+        $this->todoCards = [];
     }
 
     /**
@@ -38,6 +44,14 @@ class DataSource
     public function getNextActionCards(): array
     {
         return $this->nextActionCards;
+    }
+
+    /**
+     * @return Card[]
+     */
+    public function getProjectCards(): array
+    {
+        return $this->projectCards;
     }
 
     /**
@@ -63,8 +77,27 @@ class DataSource
         $this->nextActionCards[] = $card;
     }
 
+    public function addProjectCard(Card $card)
+    {
+        $this->projectCards[$card->getDescription()] = $card;
+    }
+
+    public function addTodoCard(Card $card)
+    {
+        if (!isset($this->todoCards[$card->getBoardId()->getId()])) {
+            $this->todoCards[$card->getBoardId()->getId()] = [];
+        }
+        $this->todoCards[$card->getBoardId()->getId()][] = $card;
+    }
+
     public function getBoardById(string $id): ?Board
     {
         return $this->boards[$id] ?? null;
+    }
+
+    public function getCardsOnList(string $listId)
+    {
+        // In these tests, the board and list ids will be the same
+        return $this->todoCards[$listId];
     }
 }

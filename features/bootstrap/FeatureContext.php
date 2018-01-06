@@ -25,6 +25,7 @@ class FeatureContext extends MinkContext implements Context
         FakeJsonApi::reset();
 
         $this->fakeApiData = new DataSource();
+        FakeJsonApi::setDataSource($this->fakeApiData);
     }
 
     /**
@@ -58,6 +59,7 @@ class FeatureContext extends MinkContext implements Context
     public function iHaveAProject($name)
     {
         FakeJsonApi::addProject($name);
+        // FIXME Do nothing, then refactor steps
     }
 
     /**
@@ -65,7 +67,21 @@ class FeatureContext extends MinkContext implements Context
      */
     public function hasATodoCard($projectName, $cardName)
     {
+        // FIXME RENAME ME ^^^^
+
         FakeJsonApi::addTodoCardToProject($projectName, $cardName);
+
+        $board = new Board(md5($projectName), $projectName);
+        $projectCard = (new CardBuilder($projectName))
+            ->linkedToProject($board->getId())
+            ->buildCard();
+        $card = (new CardBuilder($cardName))
+            ->withBoardId($board->getId())
+            ->buildCard();
+
+        $this->fakeApiData->addBoard($board);
+        $this->fakeApiData->addProjectCard($projectCard);
+        $this->fakeApiData->addTodoCard($card);
     }
 
     /**
@@ -73,7 +89,6 @@ class FeatureContext extends MinkContext implements Context
      */
     public function iViewMyNextActionsList()
     {
-        FakeJsonApi::setDataSource($this->fakeApiData);
         $this->visit("/actions");
     }
 
@@ -82,7 +97,6 @@ class FeatureContext extends MinkContext implements Context
      */
     public function iClickOn($nextActionName)
     {
-        FakeJsonApi::setDataSource($this->fakeApiData);
         $this->visit('/actions');
         $this->clickLink($nextActionName);
     }

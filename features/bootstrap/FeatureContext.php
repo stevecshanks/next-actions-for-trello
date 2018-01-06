@@ -1,6 +1,9 @@
 <?php
 
+use App\Tests\Trello\CardBuilder;
+use App\Tests\Trello\DataSource;
 use App\Tests\Trello\FakeJsonApi;
+use App\Trello\Board;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
@@ -10,6 +13,9 @@ use Behat\MinkExtension\Context\MinkContext;
  */
 class FeatureContext extends MinkContext implements Context
 {
+    /** @var DataSource */
+    protected $fakeApiData;
+
     /**
      * @BeforeScenario
      */
@@ -17,14 +23,8 @@ class FeatureContext extends MinkContext implements Context
     {
         // Make sure no cards are hanging around from a previous test
         FakeJsonApi::reset();
-    }
 
-    /**
-     * @When I view my Next Actions list
-     */
-    public function iViewMyNextActionsList()
-    {
-        $this->visit("/actions");
+        $this->fakeApiData = new DataSource();
     }
 
     /**
@@ -34,7 +34,14 @@ class FeatureContext extends MinkContext implements Context
     public function iAmAMemberOfTheCardOnTheBoard($cardName, $boardName = 'some board')
     {
         FakeJsonApi::addBoard($boardName);
-        FakeJsonApi::joinCard($cardName);
+
+        $board = new Board(md5($boardName), $boardName);
+        $card = (new CardBuilder($cardName))
+            ->withBoardId($board->getId())
+            ->withUrl($this->generateFakeUrlForCard($cardName))
+            ->buildCard();
+        $this->fakeApiData->addBoard($board);
+        $this->fakeApiData->joinCard($card);
     }
 
     /**
@@ -62,6 +69,25 @@ class FeatureContext extends MinkContext implements Context
     }
 
     /**
+     * @When I view my Next Actions list
+     */
+    public function iViewMyNextActionsList()
+    {
+        FakeJsonApi::setDataSource($this->fakeApiData);
+        $this->visit("/actions");
+    }
+
+    /**
+     * @When I click on :nextActionName
+     */
+    public function iClickOn($nextActionName)
+    {
+        FakeJsonApi::setDataSource($this->fakeApiData);
+        $this->visit('/actions');
+        $this->clickLink($nextActionName);
+    }
+
+    /**
      * @Then I should see a Next Action :name
      */
     public function iShouldSeeANextAction($name)
@@ -78,21 +104,12 @@ class FeatureContext extends MinkContext implements Context
     }
 
     /**
-     * @When I click on :nextActionName
-     */
-    public function iClickOn($nextActionName)
-    {
-        $this->visit('/actions');
-        $this->clickLink($nextActionName);
-    }
-
-    /**
      * @Then I should be taken to :cardName on Trello
      */
     public function iShouldBeTakenToOnTrello($cardName)
     {
         $currentUrl = $this->getSession()->getCurrentUrl();
-        $expectedUrl = FakeJsonApi::generateFakeUrlForCard($cardName);
+        $expectedUrl = $this->generateFakeUrlForCard($cardName);
 
         assert(strpos($currentUrl, $expectedUrl) !== false);
     }
@@ -103,5 +120,10 @@ class FeatureContext extends MinkContext implements Context
     public function iShouldSeeTheProject($name)
     {
         $this->assertPageContainsText($name);
+    }
+
+    protected function generateFakeUrlForCard(string $cardName): string
+    {
+        return '/actions?testcard=' . urlencode($cardName);
     }
 }

@@ -24,6 +24,14 @@ class FakeJsonApi implements Api
     /** @var string[] */
     protected static $boardsById = [];
 
+    /** @var DataSource */
+    protected static $dataSource;
+
+    public static function setDataSource(DataSource $dataSource)
+    {
+        self::$dataSource = $dataSource;
+    }
+
     public static function reset()
     {
         self::$joinedCards = [];
@@ -81,7 +89,7 @@ class FakeJsonApi implements Api
     public function fetchCardsIAmAMemberOf(): array
     {
         $client = (new MockClientBuilder())
-            ->withResponse($this->buildJsonFromCardNames(self::$joinedCards))
+            ->withResponse($this->buildJsonForCards(self::$dataSource->getJoinedCards()))
             ->build();
         $jsonApi = new JsonApi($client, new Auth('', ''));
 
@@ -183,6 +191,23 @@ class FakeJsonApi implements Api
             $cards[] = $builder->buildJsonArray();
         }
         return json_encode($cards);
+    }
+
+    protected function buildJsonForCards(array $cards): string
+    {
+        $cardsAsArrays = array_map(
+            function (Card $card) {
+                return [
+                    'id' => $card->getId(),
+                    'name' => $card->getName(),
+                    'desc' => $card->getDescription(),
+                    'url' => $card->getUrl(),
+                    'idBoard' => $card->getBoardId()->getId()
+                ];
+            },
+            $cards
+        );
+        return json_encode($cardsAsArrays);
     }
 
     protected function buildJsonFromProjectNames(): string

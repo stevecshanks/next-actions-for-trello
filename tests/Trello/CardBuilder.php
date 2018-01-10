@@ -2,6 +2,7 @@
 
 namespace App\Tests\Trello;
 
+use App\Trello\Board;
 use App\Trello\Card;
 
 class CardBuilder
@@ -27,7 +28,7 @@ class CardBuilder
 
         $this->id = md5($name);
         $this->description = "Card called {$name}";
-        $this->url = "https://trello.com/c/{$this->id}";
+        $this->url = Card::BASE_URL . "/{$this->id}";
         $this->boardId = md5("board-{$this->name}");
     }
 
@@ -73,7 +74,7 @@ class CardBuilder
 
     public function linkedToProject(string $projectId): CardBuilder
     {
-        $this->description = "https://trello.com/b/{$projectId}";
+        $this->description = Board::BASE_URL . "/{$projectId}";
         return $this;
     }
 }

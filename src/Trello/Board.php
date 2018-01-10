@@ -4,6 +4,8 @@ namespace App\Trello;
 
 class Board extends BoardId
 {
+    const BASE_URL = 'https://trello.com/b';
+
     /** @var string */
     protected $name;
 

@@ -18,7 +18,7 @@ class JsonApiTest extends TestCase
             function (JsonApi $api) {
                 $api->fetchCardsIAmAMemberOf();
             },
-            'https://api.trello.com/1/members/me/cards?key=foo&token=bar'
+            JsonApi::BASE_URL . '/members/me/cards?key=foo&token=bar'
         );
     }
 
@@ -46,7 +46,7 @@ class JsonApiTest extends TestCase
             function (JsonApi $api) {
                 $api->fetchCardsOnList(new ListId('123'));
             },
-            'https://api.trello.com/1/lists/123/cards?key=foo&token=bar'
+            JsonApi::BASE_URL . '/lists/123/cards?key=foo&token=bar'
         );
     }
 
@@ -87,7 +87,7 @@ class JsonApiTest extends TestCase
             function (JsonApi $api) {
                 $api->fetchListsOnBoard(new BoardId('123'));
             },
-            'https://api.trello.com/1/boards/123/lists?key=foo&token=bar'
+            JsonApi::BASE_URL . '/boards/123/lists?key=foo&token=bar'
         );
     }
 
@@ -136,7 +136,7 @@ class JsonApiTest extends TestCase
             function (JsonApi $api) {
                 $api->fetchBoard(new BoardId('123'));
             },
-            'https://api.trello.com/1/boards/123?key=foo&token=bar'
+            JsonApi::BASE_URL . '/boards/123?key=foo&token=bar'
         );
     }
 

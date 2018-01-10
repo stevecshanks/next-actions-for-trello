@@ -4,6 +4,8 @@ namespace App\Tests;
 
 use App\Project;
 use App\Tests\Trello\CardBuilder;
+use App\Trello\Board;
+use App\Trello\Card;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -25,7 +27,7 @@ class ProjectTest extends TestCase
         return [
             [''],
             ['google.com'],
-            ['https://trello.com/c/1234abcd']
+            [Card::BASE_URL . '/1234abcd']
         ];
     }
 
@@ -45,8 +47,8 @@ class ProjectTest extends TestCase
     public function cardDescriptionProvider()
     {
         return [
-            ['https://trello.com/b/1234abcd', '1234abcd'],
-            ['https://trello.com/b/12345678/my-project-board', '12345678']
+            [Board::BASE_URL . '/1234abcd', '1234abcd'],
+            [Board::BASE_URL . '/12345678/my-project-board', '12345678']
         ];
     }
 }

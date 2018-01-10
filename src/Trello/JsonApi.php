@@ -9,6 +9,8 @@ use stdClass;
 
 class JsonApi implements Api
 {
+    const BASE_URL = 'https://api.trello.com/1';
+
     /** @var Client */
     protected $client;
     /** @var Config */
@@ -30,7 +32,7 @@ class JsonApi implements Api
      */
     public function fetchCardsIAmAMemberOf(): array
     {
-        $uri = (new Uri('https://api.trello.com/1/members/me/cards'))
+        $uri = (new Uri(self::BASE_URL . '/members/me/cards'))
             ->withQuery(http_build_query([
                 'key' => $this->auth->getKey(),
                 'token' => $this->auth->getToken()
@@ -44,7 +46,7 @@ class JsonApi implements Api
      */
     public function fetchCardsOnList(ListId $listId): array
     {
-        $uri = (new Uri("https://api.trello.com/1/lists/{$listId->getId()}/cards"))
+        $uri = (new Uri(self::BASE_URL . "/lists/{$listId->getId()}/cards"))
             ->withQuery(http_build_query([
                 'key' => $this->auth->getKey(),
                 'token' => $this->auth->getToken()
@@ -58,7 +60,7 @@ class JsonApi implements Api
      */
     public function fetchBoard(BoardId $boardId): ?Board
     {
-        $uri = (new Uri("https://api.trello.com/1/boards/{$boardId->getId()}"))
+        $uri = (new Uri(self::BASE_URL . "/boards/{$boardId->getId()}"))
             ->withQuery(http_build_query([
                 'key' => $this->auth->getKey(),
                 'token' => $this->auth->getToken()
@@ -97,7 +99,7 @@ class JsonApi implements Api
      */
     public function fetchListsOnBoard(BoardId $boardId): array
     {
-        $uri = (new Uri("https://api.trello.com/1/boards/{$boardId->getId()}/lists"))
+        $uri = (new Uri(self::BASE_URL . "/boards/{$boardId->getId()}/lists"))
             ->withQuery(http_build_query([
                 'key' => $this->auth->getKey(),
                 'token' => $this->auth->getToken()

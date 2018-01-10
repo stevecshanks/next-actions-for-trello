@@ -6,6 +6,8 @@ use stdClass;
 
 class Card
 {
+    const BASE_URL = 'https://trello.com/c';
+
     /** @var string */
     protected $id;
     /** @var string */

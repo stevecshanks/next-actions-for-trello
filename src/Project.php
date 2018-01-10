@@ -33,7 +33,7 @@ class Project
      */
     public static function fromCard(Card $card): Project
     {
-        $regex = Regex::fromString("#https://trello.com/b/(\w+)#");
+        $regex = Regex::fromString('#' . Board::BASE_URL . '/(\w+)#');
         $matches = $regex->match($card->getDescription());
         if (!isset($matches[1])) {
             throw new InvalidArgumentException('Could not determine project board from description');

@@ -4,36 +4,28 @@ namespace App;
 
 use App\Trello\Api;
 use App\Trello\Card;
-use App\Trello\ListId;
+use App\Trello\Config;
 
 class NextActionsLookup
 {
     /** @var Api */
     protected $api;
-    /** @var ListId */
-    protected $nextActionsListId;
-    /** @var ListId */
-    protected $projectsListId;
     /** @var NextActionForProjectLookup */
-    private $nextActionForProjectLookup;
+    protected $nextActionForProjectLookup;
+    /** @var Config */
+    protected $config;
 
     /**
      * NextActionsLookup constructor.
      * @param Api $api
      * @param NextActionForProjectLookup $nextActionForProjectLookup
-     * @param ListId $nextActionsListId
-     * @param ListId $projectsListId
+     * @param Config $config
      */
-    public function __construct(
-        Api $api,
-        NextActionForProjectLookup $nextActionForProjectLookup,
-        ListId $nextActionsListId,
-        ListId $projectsListId
-    ) {
+    public function __construct(Api $api, NextActionForProjectLookup $nextActionForProjectLookup, Config $config)
+    {
         $this->api = $api;
-        $this->nextActionsListId = $nextActionsListId;
-        $this->projectsListId = $projectsListId;
         $this->nextActionForProjectLookup = $nextActionForProjectLookup;
+        $this->config = $config;
     }
 
     /**
@@ -68,7 +60,7 @@ class NextActionsLookup
             function (Card $card) {
                 return new NextAction($card);
             },
-            $this->api->fetchCardsOnList($this->nextActionsListId)
+            $this->api->fetchCardsOnList($this->config->getNextActionsListId())
         );
     }
 
@@ -76,7 +68,7 @@ class NextActionsLookup
     {
         $results = [];
 
-        $projectCards = $this->api->fetchCardsOnList($this->projectsListId);
+        $projectCards = $this->api->fetchCardsOnList($this->config->getProjectsListId());
         foreach ($projectCards as $card) {
             $project = Project::fromCard($card);
             $todo = $this->nextActionForProjectLookup->lookup($project);

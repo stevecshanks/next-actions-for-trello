@@ -30,11 +30,13 @@ services:
         class: App\Trello\JsonApi
         arguments:
             - '@GuzzleHttp\Client'
-            - '@App\Trello\Auth'
+            - '@App\Trello\Config'
 
     GuzzleHttp\Client: ~
 
-    App\Trello\Auth:
+    App\Trello\Config:
         arguments:
             - '%env(TRELLO_API_KEY)%'
             - '%env(TRELLO_API_TOKEN)%'
+            - '%env(TRELLO_NEXT_ACTIONS_LIST_ID)%'
+            - '%env(TRELLO_PROJECTS_LIST_ID)%'

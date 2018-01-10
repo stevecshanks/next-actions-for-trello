@@ -3,7 +3,7 @@
 namespace App\Tests\Trello;
 
 use App\Trello\Api;
-use App\Trello\Auth;
+use App\Trello\Config;
 use App\Trello\Board;
 use App\Trello\BoardId;
 use App\Trello\Card;
@@ -13,8 +13,19 @@ use App\Trello\NamedList;
 
 class FakeJsonApi implements Api
 {
+    /** @var Config */
+    protected $config;
     /** @var DataSource */
     protected static $dataSource;
+
+    /**
+     * FakeJsonApi constructor.
+     * @param Config $config
+     */
+    public function __construct(Config $config)
+    {
+        $this->config = $config;
+    }
 
     public static function setDataSource(DataSource $dataSource)
     {
@@ -29,7 +40,7 @@ class FakeJsonApi implements Api
         $client = (new MockClientBuilder())
             ->withResponse($this->buildJsonForCards(self::$dataSource->getJoinedCards()))
             ->build();
-        $jsonApi = new JsonApi($client, new Auth('', ''));
+        $jsonApi = new JsonApi($client, $this->config);
 
         return $jsonApi->fetchCardsIAmAMemberOf();
     }
@@ -40,11 +51,11 @@ class FakeJsonApi implements Api
      */
     public function fetchCardsOnList(ListId $listId): array
     {
-        if ($listId->getId() === $_SERVER['TRELLO_PROJECTS_LIST_ID']) {
+        if ($listId->getId() === $this->config->getProjectsListId()->getId()) {
             $json = $this->buildJsonForCards(
                 self::$dataSource->getProjectCards()
             );
-        } elseif ($listId->getId() === $_SERVER['TRELLO_NEXT_ACTIONS_LIST_ID']) {
+        } elseif ($listId->getId() === $this->config->getNextActionsListId()->getId()) {
             $json = $this->buildJsonForCards(
                 self::$dataSource->getNextActionCards()
             );
@@ -57,7 +68,7 @@ class FakeJsonApi implements Api
         $client = (new MockClientBuilder())
             ->withResponse($json)
             ->build();
-        $jsonApi = new JsonApi($client, new Auth('', ''));
+        $jsonApi = new JsonApi($client, $this->config);
 
         return $jsonApi->fetchCardsOnList($listId);
     }
@@ -83,7 +94,7 @@ class FakeJsonApi implements Api
         $client = (new MockClientBuilder())
             ->withResponse($json)
             ->build();
-        $jsonApi = new JsonApi($client, new Auth('', ''));
+        $jsonApi = new JsonApi($client, $this->config);
 
         return $jsonApi->fetchListsOnBoard($boardId);
     }
@@ -107,7 +118,7 @@ class FakeJsonApi implements Api
         $client = (new MockClientBuilder())
             ->withResponse($json)
             ->build();
-        $jsonApi = new JsonApi($client, new Auth('', ''));
+        $jsonApi = new JsonApi($client, $this->config);
 
         return $jsonApi->fetchBoard($boardId);
     }

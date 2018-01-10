@@ -9,5 +9,7 @@ services:
     # test.App\Service\MyService: '@App\Service\MyService'
     App\Trello\Api:
         class: App\Tests\Trello\FakeJsonApi
+        arguments:
+            - '@App\Trello\Config'
 
     test.App\Trello\Api: '@App\Trello\Api'

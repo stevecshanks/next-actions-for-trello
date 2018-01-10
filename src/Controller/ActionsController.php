@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\NextActionForProjectLookup;
 use App\NextActionsLookup;
 use App\Trello\Api;
+use App\Trello\Config;
 use App\Trello\ListId;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,15 +18,15 @@ class ActionsController extends AbstractController
      * @Route("/actions")
      *
      * @param Api $trelloApi
+     * @param Config $config
      * @return Response
      */
-    public function list(Api $trelloApi): Response
+    public function list(Api $trelloApi, Config $config): Response
     {
         $lookup = new NextActionsLookup(
             $trelloApi,
             new NextActionForProjectLookup($trelloApi),
-            new ListId($_SERVER['TRELLO_NEXT_ACTIONS_LIST_ID']),
-            new ListId($_SERVER['TRELLO_PROJECTS_LIST_ID'])
+            $config
         );
         $nextActions = $lookup->lookup();
 

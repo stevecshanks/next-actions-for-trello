@@ -2,7 +2,7 @@
 
 namespace App\Tests\Trello;
 
-use App\Trello\Auth;
+use App\Trello\Config;
 use App\Trello\BoardId;
 use App\Trello\Card;
 use App\Trello\JsonApi;
@@ -30,7 +30,7 @@ class JsonApiTest extends TestCase
         $client = (new MockClientBuilder())
             ->withResponse(json_encode($cardJsonArray))
             ->build();
-        $api = new JsonApi($client, new Auth('foo', 'bar'));
+        $api = new JsonApi($client, $this->createMock(Config::class));
 
         $results = $api->fetchCardsIAmAMemberOf();
 
@@ -58,7 +58,7 @@ class JsonApiTest extends TestCase
         $client = (new MockClientBuilder())
             ->withResponse(json_encode($cardJsonArray))
             ->build();
-        $api = new JsonApi($client, new Auth('foo', 'bar'));
+        $api = new JsonApi($client, $this->createMock(Config::class));
 
         $results = $api->fetchCardsOnList(new ListId(''));
 
@@ -99,7 +99,7 @@ class JsonApiTest extends TestCase
         $client = (new MockClientBuilder())
             ->withResponse(json_encode($lists))
             ->build();
-        $api = new JsonApi($client, new Auth('foo', 'bar'));
+        $api = new JsonApi($client, $this->createMock(Config::class));
 
         $results = $api->fetchListsOnBoard(new BoardId(''));
 
@@ -148,7 +148,7 @@ class JsonApiTest extends TestCase
                 'name' => 'My Board'
             ]))
             ->build();
-        $api = new JsonApi($client, new Auth('foo', 'bar'));
+        $api = new JsonApi($client, $this->createMock(Config::class));
 
         $result = $api->fetchBoard(new BoardId('123'));
 
@@ -164,7 +164,11 @@ class JsonApiTest extends TestCase
             ->writeHistoryTo($container)
             ->build();
 
-        $api = new JsonApi($client, new Auth('foo', 'bar'));
+        $config = $this->createMock(Config::class);
+        $config->method('getKey')->willReturn('foo');
+        $config->method('getToken')->willReturn('bar');
+
+        $api = new JsonApi($client, $config);
         call_user_func_array($callMethod, [$api]);
 
         $this->assertCount(1, $container);

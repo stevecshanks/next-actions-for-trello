@@ -10,6 +10,7 @@ use App\Tests\Trello\CardBuilder;
 use App\Trello\Api;
 use App\Trello\Board;
 use App\Trello\BoardId;
+use App\Trello\Config;
 use App\Trello\ListId;
 use PHPUnit\Framework\TestCase;
 
@@ -35,11 +36,12 @@ class NextActionsLookupTest extends TestCase
             }
         );
 
+        $config = $this->createMock(Config::class);
+
         $lookup = new NextActionsLookup(
             $api,
             $this->createMock(NextActionForProjectLookup::class),
-            new ListId(''),
-            new ListId('')
+            $config
         );
 
         $results = $lookup->lookup();
@@ -67,11 +69,13 @@ class NextActionsLookupTest extends TestCase
             }
         );
 
+        $config = $this->createMock(Config::class);
+        $config->method('getNextActionsListId')->willReturn(new ListId('actions'));
+
         $lookup = new NextActionsLookup(
             $api,
             $this->createMock(NextActionForProjectLookup::class),
-            new ListId('actions'),
-            new ListId('')
+            $config
         );
 
         $results = $lookup->lookup();
@@ -111,11 +115,13 @@ class NextActionsLookupTest extends TestCase
             }
         );
 
+        $config = $this->createMock(Config::class);
+        $config->method('getProjectsListId')->willReturn(new ListId('projects'));
+
         $lookup = new NextActionsLookup(
             $api,
             $nextActionForProjectLookup,
-            new ListId(''),
-            new ListId('projects')
+            $config
         );
 
         $results = $lookup->lookup();

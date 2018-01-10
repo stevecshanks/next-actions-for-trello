@@ -11,15 +11,15 @@ class JsonApi implements Api
 {
     /** @var Client */
     protected $client;
-    /** @var Auth */
+    /** @var Config */
     protected $auth;
 
     /**
      * JsonApi constructor.
      * @param Client $client
-     * @param Auth $auth
+     * @param Config $auth
      */
-    public function __construct(Client $client, Auth $auth)
+    public function __construct(Client $client, Config $auth)
     {
         $this->client = $client;
         $this->auth = $auth;

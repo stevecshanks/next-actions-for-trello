@@ -5,7 +5,6 @@ use App\Tests\Trello\DataSource;
 use App\Tests\Trello\FakeJsonApi;
 use App\Trello\Board;
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
 
 /**
@@ -17,9 +16,9 @@ class FeatureContext extends MinkContext implements Context
     protected $fakeApiData;
 
     /**
-     * @BeforeScenario
+     * FeatureContext constructor.
      */
-    public function prepare(BeforeScenarioScope $scope)
+    public function __construct()
     {
         $this->fakeApiData = new DataSource();
         FakeJsonApi::setDataSource($this->fakeApiData);

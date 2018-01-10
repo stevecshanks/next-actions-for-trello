@@ -16,7 +16,7 @@ class DataSource
     protected $projectCards;
     /** @var Board[] */
     protected $boards;
-    /** Card[][] */
+    /** @var Card[][] */
     protected $todoCards;
 
     /**
@@ -56,14 +56,6 @@ class DataSource
         return array_values($this->projectCards);
     }
 
-    /**
-     * @return Board[]
-     */
-    public function getBoards(): array
-    {
-        return $this->boards;
-    }
-
     public function joinCard(Card $card)
     {
         $this->joinedCards[] = $card;
@@ -99,7 +91,7 @@ class DataSource
         return $this->boards[$boardId->getId()] ?? null;
     }
 
-    public function getCardsOnTodoList(string $listOrBoardId)
+    public function getCardsOnTodoList(string $listOrBoardId): array
     {
         // In these tests, the board and list ids will be the same
         return $this->todoCards[$listOrBoardId] ?? [];

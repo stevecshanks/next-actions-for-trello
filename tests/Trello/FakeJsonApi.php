@@ -112,7 +112,7 @@ class FakeJsonApi implements Api
                 'name' => $board->getName()
             ]);
         } else {
-            $json = null;
+            $json = json_encode(null);
         }
 
         $client = (new MockClientBuilder())

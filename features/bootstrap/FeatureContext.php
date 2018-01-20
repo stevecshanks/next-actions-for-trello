@@ -68,6 +68,25 @@ class FeatureContext extends MinkContext implements Context
     }
 
     /**
+     * @Transform :date
+     */
+    public function castStringToDateTime($date)
+    {
+        return DateTimeImmutable::createFromFormat("d/m/Y", $date);
+    }
+
+    /**
+     * @Given I have a card :name on my Next Actions list with a due date of :date
+     */
+    public function iHaveACardOnMyNextActionsListWithADueDateOf($name, DateTimeInterface $date)
+    {
+        $card = (new CardBuilder($name))
+            ->withUrl($this->generateFakeUrlForCard($name))
+            ->buildCard();
+        $this->fakeApiData->addNextActionCard($card);
+    }
+
+    /**
      * @When I view my Next Actions list
      */
     public function iViewMyNextActionsList()
@@ -80,7 +99,6 @@ class FeatureContext extends MinkContext implements Context
      */
     public function iClickOn($nextActionName)
     {
-        $this->visit('/actions');
         $this->clickLink($nextActionName);
     }
 

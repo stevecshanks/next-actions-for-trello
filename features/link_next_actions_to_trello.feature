@@ -5,7 +5,8 @@ Feature: Link Next Actions to Trello
 
   Scenario: Click to view Trello card
     Given I have a card "Improve usability" on my Next Actions list
-    When I click on "Improve usability"
+    When I view my Next Actions list
+    And I click on "Improve usability"
     Then I should be taken to "Improve usability" on Trello
 
   Scenario: See project name for project Next Actions
@@ -19,3 +20,9 @@ Feature: Link Next Actions to Trello
     When I view my Next Actions list
     Then I should see the Project "Improve usability"
     And I should see a Next Action "See board name"
+
+  Scenario: See due date of card
+    Given I have a card "Improve usability" on my Next Actions list with a due date of "01/02/2018"
+    When I view my Next Actions list
+    Then I should see a Next Action "Improve usability"
+    And I should see "01/02/2018"

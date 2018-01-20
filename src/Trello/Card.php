@@ -2,6 +2,7 @@
 
 namespace App\Trello;
 
+use DateTimeInterface;
 use stdClass;
 
 class Card
@@ -18,6 +19,8 @@ class Card
     protected $url;
     /** @var BoardId */
     protected $boardId;
+    /** @var DateTimeInterface|null */
+    protected $dueDate;
 
     /**
      * Card constructor.
@@ -26,14 +29,22 @@ class Card
      * @param string $description
      * @param string $url
      * @param BoardId $boardId
+     * @param DateTimeInterface|null $dueDate
      */
-    protected function __construct(string $id, string $name, string $description, string $url, BoardId $boardId)
-    {
+    protected function __construct(
+        string $id,
+        string $name,
+        string $description,
+        string $url,
+        BoardId $boardId,
+        ?DateTimeInterface $dueDate
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->description = $description;
         $this->url = $url;
         $this->boardId = $boardId;
+        $this->dueDate = $dueDate;
     }
 
     public static function fromJson(stdClass $json)
@@ -43,7 +54,8 @@ class Card
             $json->name,
             $json->desc,
             $json->url,
-            new BoardId($json->idBoard)
+            new BoardId($json->idBoard),
+            $json->due
         );
     }
 
@@ -85,5 +97,13 @@ class Card
     public function getBoardId(): BoardId
     {
         return $this->boardId;
+    }
+
+    /**
+     * @return DateTimeInterface|null
+     */
+    public function getDueDate(): ?DateTimeInterface
+    {
+        return $this->dueDate;
     }
 }

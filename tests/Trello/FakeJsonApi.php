@@ -132,7 +132,8 @@ class FakeJsonApi implements Api
                     'name' => $card->getName(),
                     'desc' => $card->getDescription(),
                     'url' => $card->getUrl(),
-                    'idBoard' => $card->getBoardId()->getId()
+                    'idBoard' => $card->getBoardId()->getId(),
+                    'due' => $card->getDueDate() ? $card->getDueDate()->format(DATE_ISO8601) : null,
                 ];
             },
             $cards

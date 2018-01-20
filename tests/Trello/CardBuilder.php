@@ -4,6 +4,7 @@ namespace App\Tests\Trello;
 
 use App\Trello\Board;
 use App\Trello\Card;
+use DateTimeInterface;
 
 class CardBuilder
 {
@@ -17,6 +18,8 @@ class CardBuilder
     protected $url;
     /** @var string */
     protected $boardId;
+    /** @var DateTimeInterface|null */
+    protected $dueDate;
 
     /**
      * CardJsonBuilder constructor.
@@ -30,6 +33,7 @@ class CardBuilder
         $this->description = "Card called {$name}";
         $this->url = Card::BASE_URL . "/{$this->id}";
         $this->boardId = md5("board-{$this->name}");
+        $this->dueDate = null;
     }
 
     public function buildJsonArray(): array
@@ -39,7 +43,8 @@ class CardBuilder
             'name' => $this->name,
             'desc' => $this->description,
             'url' => $this->url,
-            'idBoard' => $this->boardId
+            'idBoard' => $this->boardId,
+            'due' => $this->dueDate ? $this->dueDate->format(DATE_ISO8601) : null,
         ];
     }
 

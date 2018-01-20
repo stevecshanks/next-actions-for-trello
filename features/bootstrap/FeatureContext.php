@@ -6,6 +6,7 @@ use App\Tests\Trello\FakeJsonApi;
 use App\Trello\Board;
 use Behat\Behat\Context\Context;
 use Behat\MinkExtension\Context\MinkContext;
+use Cake\Chronos\Chronos;
 
 /**
  * Defines application features from the specific context.
@@ -72,7 +73,7 @@ class FeatureContext extends MinkContext implements Context
      */
     public function castStringToDateTime($date)
     {
-        return DateTimeImmutable::createFromFormat("d/m/Y", $date);
+        return Chronos::createFromFormat("d/m/Y", $date);
     }
 
     /**

@@ -81,7 +81,7 @@ class FeatureContext extends MinkContext implements Context
     public function iHaveACardOnMyNextActionsListWithADueDateOf($name, DateTimeInterface $date)
     {
         $card = (new CardBuilder($name))
-            ->withUrl($this->generateFakeUrlForCard($name))
+            ->withDueDate($date)
             ->build();
         $this->fakeApiData->addNextActionCard($card);
     }

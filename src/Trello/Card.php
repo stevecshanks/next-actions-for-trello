@@ -2,6 +2,7 @@
 
 namespace App\Trello;
 
+use Cake\Chronos\Chronos;
 use DateTimeInterface;
 use JsonSerializable;
 use stdClass;
@@ -9,6 +10,7 @@ use stdClass;
 class Card implements JsonSerializable
 {
     const BASE_URL = 'https://trello.com/c';
+    const DATE_FORMAT = 'Y-m-d\TH:i:s.uP';
 
     /** @var string */
     protected $id;
@@ -56,7 +58,7 @@ class Card implements JsonSerializable
             $json->desc,
             $json->url,
             new BoardId($json->idBoard),
-            $json->due
+            $json->due ? Chronos::createFromFormat(static::DATE_FORMAT, $json->due) : null
         );
     }
 
@@ -119,7 +121,7 @@ class Card implements JsonSerializable
             'desc' => $this->description,
             'url' => $this->url,
             'idBoard' => $this->boardId->getId(),
-            'due' => $this->dueDate ? $this->dueDate->format(DATE_ISO8601) : null,
+            'due' => $this->dueDate ? $this->dueDate->format(static::DATE_FORMAT) : null,
         ];
     }
 }

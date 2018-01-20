@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Trello\Card;
+use DateTimeInterface;
 
 class NextAction
 {
@@ -33,6 +34,11 @@ class NextAction
     public function getProject(): ?Project
     {
         return $this->project;
+    }
+
+    public function getDueDate(): ?DateTimeInterface
+    {
+        return $this->card->getDueDate();
     }
 
     public function forProject(Project $project): NextAction

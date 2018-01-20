@@ -7,3 +7,7 @@ h2 {
     font-size: 1rem;
     display: inline;
 }
+
+.badge-pill {
+    float: right;
+}

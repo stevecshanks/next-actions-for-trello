@@ -10,6 +10,9 @@
                 <h2>{{ action.project.name }}</h2> -
             {% endif %}
             {{ action.name }}
+            {% if action.dueDate %}
+                <span class="badge badge-primary badge-pill">{{ action.dueDate|date("d/m/Y") }}</span>
+            {% endif %}
         </a>
     {% endfor %}
     </div>

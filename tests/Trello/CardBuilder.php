@@ -73,6 +73,12 @@ class CardBuilder
         return $this;
     }
 
+    public function withDueDate(DateTimeInterface $dueDate): CardBuilder
+    {
+        $this->dueDate = $dueDate;
+        return $this;
+    }
+
     public function linkedToProject(string $projectId): CardBuilder
     {
         $this->description = Board::BASE_URL . "/{$projectId}";

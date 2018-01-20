@@ -23,8 +23,8 @@ class DataSourceTest extends TestCase
 
     public function testProjectCardsAreReturnedCorrectly()
     {
-        $card1 = (new CardBuilder(''))->withDescription('one')->buildCard();
-        $card2 = (new CardBuilder(''))->withDescription('two')->buildCard();
+        $card1 = (new CardBuilder(''))->withDescription('one')->build();
+        $card2 = (new CardBuilder(''))->withDescription('two')->build();
 
         $dataSource = new DataSource();
         $dataSource->addProjectCard($card1);
@@ -71,10 +71,10 @@ class DataSourceTest extends TestCase
 
     public function testGetCardsOnTodoListReturnsCorrectCards()
     {
-        $card1 = (new CardBuilder(''))->withBoardId('project1')->buildCard();
-        $card2 = (new CardBuilder(''))->withBoardId('project1')->buildCard();
+        $card1 = (new CardBuilder(''))->withBoardId('project1')->build();
+        $card2 = (new CardBuilder(''))->withBoardId('project1')->build();
 
-        $card3 = (new CardBuilder(''))->withBoardId('project2')->buildCard();
+        $card3 = (new CardBuilder(''))->withBoardId('project2')->build();
 
         $dataSource = new DataSource();
         $dataSource->addTodoCard($card1);

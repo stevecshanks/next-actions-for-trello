@@ -65,8 +65,8 @@ class NextActionForProjectLookupTest extends TestCase
             function (ListId $listId) {
                 if ($listId->getId() === 'todo') {
                     return [
-                        (new CardBuilder('Test 1'))->buildCard(),
-                        (new CardBuilder('Test 2'))->buildCard()
+                        (new CardBuilder('Test 1'))->build(),
+                        (new CardBuilder('Test 2'))->build()
                     ];
                 }
                 return [];

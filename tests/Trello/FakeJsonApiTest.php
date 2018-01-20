@@ -12,7 +12,7 @@ class FakeJsonApiTest extends TestCase
 {
     public function testFetchCardsIAmAMemberOfReturnsJoinedCards()
     {
-        $card = (new CardBuilder('my card'))->buildCard();
+        $card = (new CardBuilder('my card'))->build();
 
         $dataSource = new DataSource();
         $dataSource->joinCard($card);
@@ -43,7 +43,7 @@ class FakeJsonApiTest extends TestCase
         $board = $this->createMock(Board::class);
         $board->method('getId')->willReturn(1);
 
-        $card = (new CardBuilder('some card'))->withBoardId('1')->buildCard();
+        $card = (new CardBuilder('some card'))->withBoardId('1')->build();
 
         $dataSource = new DataSource();
         $dataSource->addBoard($board);
@@ -96,7 +96,7 @@ class FakeJsonApiTest extends TestCase
 
     public function testFetchCardsOnListReturnsProjectCards()
     {
-        $card = (new CardBuilder('a project'))->buildCard();
+        $card = (new CardBuilder('a project'))->build();
 
         $dataSource = new DataSource();
         $dataSource->addProjectCard($card);
@@ -115,7 +115,7 @@ class FakeJsonApiTest extends TestCase
 
     public function testFetchCardsOnListReturnsNextActionCards()
     {
-        $card = (new CardBuilder('some card'))->buildCard();
+        $card = (new CardBuilder('some card'))->build();
 
         $dataSource = new DataSource();
         $dataSource->addNextActionCard($card);
@@ -134,7 +134,7 @@ class FakeJsonApiTest extends TestCase
 
     public function testFetchCardsOnListReturnsTodoListCards()
     {
-        $card = (new CardBuilder('some card'))->withBoardId('123')->buildCard();
+        $card = (new CardBuilder('some card'))->withBoardId('123')->build();
 
         $dataSource = new DataSource();
         $dataSource->addTodoCard($card);

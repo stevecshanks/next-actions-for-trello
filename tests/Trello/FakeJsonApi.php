@@ -125,19 +125,6 @@ class FakeJsonApi implements Api
 
     protected function buildJsonForCards(array $cards): string
     {
-        $cardsAsArrays = array_map(
-            function (Card $card) {
-                return [
-                    'id' => $card->getId(),
-                    'name' => $card->getName(),
-                    'desc' => $card->getDescription(),
-                    'url' => $card->getUrl(),
-                    'idBoard' => $card->getBoardId()->getId(),
-                    'due' => $card->getDueDate() ? $card->getDueDate()->format(DATE_ISO8601) : null,
-                ];
-            },
-            $cards
-        );
-        return json_encode($cardsAsArrays);
+        return json_encode($cards);
     }
 }

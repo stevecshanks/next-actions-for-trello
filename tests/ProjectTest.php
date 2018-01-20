@@ -17,7 +17,7 @@ class ProjectTest extends TestCase
     public function testFromCardThrowsExceptionIfBoardIdCannotBeParsed(string $description)
     {
         $this->expectException(InvalidArgumentException::class);
-        $card = (new CardBuilder(''))->withDescription($description)->buildCard();
+        $card = (new CardBuilder(''))->withDescription($description)->build();
 
         Project::fromCard($card);
     }
@@ -36,7 +36,7 @@ class ProjectTest extends TestCase
      */
     public function testFromCardCreatesCorrectProject(string $description, string $expectedBoardId)
     {
-        $card = (new CardBuilder('My Project'))->withDescription($description)->buildCard();
+        $card = (new CardBuilder('My Project'))->withDescription($description)->build();
 
         $project = Project::fromCard($card);
 

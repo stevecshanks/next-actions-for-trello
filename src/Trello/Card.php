@@ -3,9 +3,10 @@
 namespace App\Trello;
 
 use DateTimeInterface;
+use JsonSerializable;
 use stdClass;
 
-class Card
+class Card implements JsonSerializable
 {
     const BASE_URL = 'https://trello.com/c';
 
@@ -31,7 +32,7 @@ class Card
      * @param BoardId $boardId
      * @param DateTimeInterface|null $dueDate
      */
-    protected function __construct(
+    public function __construct(
         string $id,
         string $name,
         string $description,
@@ -105,5 +106,20 @@ class Card
     public function getDueDate(): ?DateTimeInterface
     {
         return $this->dueDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'desc' => $this->description,
+            'url' => $this->url,
+            'idBoard' => $this->boardId->getId(),
+            'due' => $this->dueDate ? $this->dueDate->format(DATE_ISO8601) : null,
+        ];
     }
 }

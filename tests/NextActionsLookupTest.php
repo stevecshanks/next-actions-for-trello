@@ -20,8 +20,8 @@ class NextActionsLookupTest extends TestCase
     {
         $api = $this->createMock(Api::class);
         $api->method('fetchCardsIAmAMemberOf')->willReturn([
-            (new CardBuilder('Test 1'))->withBoardId('abc')->buildCard(),
-            (new CardBuilder('Test 2'))->withBoardId('def')->buildCard()
+            (new CardBuilder('Test 1'))->withBoardId('abc')->build(),
+            (new CardBuilder('Test 2'))->withBoardId('def')->build()
         ]);
         $api->method('fetchBoard')->willReturnCallback(
             function (BoardId $boardId) {
@@ -61,8 +61,8 @@ class NextActionsLookupTest extends TestCase
             function (ListId $listId) {
                 if ($listId->getId() === 'actions') {
                     return [
-                        (new CardBuilder('Test 1'))->buildCard(),
-                        (new CardBuilder('Test 2'))->buildCard()
+                        (new CardBuilder('Test 1'))->build(),
+                        (new CardBuilder('Test 2'))->build()
                     ];
                 }
                 return [];
@@ -93,8 +93,8 @@ class NextActionsLookupTest extends TestCase
             function (ListId $listId) {
                 if ($listId->getId() === 'projects') {
                     return [
-                        (new CardBuilder(''))->linkedToProject('project1')->buildCard(),
-                        (new CardBuilder(''))->linkedToProject('project2')->buildCard()
+                        (new CardBuilder(''))->linkedToProject('project1')->build(),
+                        (new CardBuilder(''))->linkedToProject('project2')->build()
                     ];
                 }
                 return [];
@@ -106,9 +106,9 @@ class NextActionsLookupTest extends TestCase
             function (Project $project) {
                 switch ($project->getBoardId()->getId()) {
                     case 'project1':
-                        return new NextAction((new CardBuilder('Test 1'))->buildCard());
+                        return new NextAction((new CardBuilder('Test 1'))->build());
                     case 'project2':
-                        return new NextAction((new CardBuilder('Test 2'))->buildCard());
+                        return new NextAction((new CardBuilder('Test 2'))->build());
                     default:
                         return null;
                 }

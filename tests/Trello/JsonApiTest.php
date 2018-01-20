@@ -25,18 +25,18 @@ class JsonApiTest extends TestCase
     /**
      * @dataProvider cardResponseProvider
      */
-    public function testFetchCardsIAmAMemberOfReturnsCorrectCards(array $cardJsonArray)
+    public function testFetchCardsIAmAMemberOfReturnsCorrectCards(array $cards)
     {
         $client = (new MockClientBuilder())
-            ->withResponse(json_encode($cardJsonArray))
+            ->withResponse(json_encode($cards))
             ->build();
         $api = new JsonApi($client, $this->createMock(Config::class));
 
         $results = $api->fetchCardsIAmAMemberOf();
 
-        $this->assertCount(count($cardJsonArray), $results);
-        foreach ($cardJsonArray as $i => $cardJson) {
-            $this->assertCardMatchesJsonArray($cardJson, $results[$i]);
+        $this->assertCount(count($cards), $results);
+        foreach ($cards as $i => $cardJson) {
+            $this->assertCardsAreIdentical($cardJson, $results[$i]);
         }
     }
 
@@ -53,18 +53,18 @@ class JsonApiTest extends TestCase
     /**
      * @dataProvider cardResponseProvider
      */
-    public function testFetchCardsOnListReturnsCorrectCards(array $cardJsonArray)
+    public function testFetchCardsOnListReturnsCorrectCards(array $cards)
     {
         $client = (new MockClientBuilder())
-            ->withResponse(json_encode($cardJsonArray))
+            ->withResponse(json_encode($cards))
             ->build();
         $api = new JsonApi($client, $this->createMock(Config::class));
 
         $results = $api->fetchCardsOnList(new ListId(''));
 
-        $this->assertCount(count($cardJsonArray), $results);
-        foreach ($cardJsonArray as $i => $cardJson) {
-            $this->assertCardMatchesJsonArray($cardJson, $results[$i]);
+        $this->assertCount(count($cards), $results);
+        foreach ($cards as $i => $cardJson) {
+            $this->assertCardsAreIdentical($cardJson, $results[$i]);
         }
     }
 
@@ -72,8 +72,8 @@ class JsonApiTest extends TestCase
     {
         $noCards = [];
         $twoCards = [
-            (new CardBuilder('Test 1'))->buildJsonArray(),
-            (new CardBuilder('Test 2'))->buildJsonArray()
+            (new CardBuilder('Test 1'))->build(),
+            (new CardBuilder('Test 2'))->build()
         ];
         return [
             [$noCards],
@@ -180,12 +180,13 @@ class JsonApiTest extends TestCase
         );
     }
 
-    protected function assertCardMatchesJsonArray(array $json, Card $card)
+    protected function assertCardsAreIdentical(Card $card1, Card $card2)
     {
-        $this->assertSame($json['id'], $card->getId());
-        $this->assertSame($json['name'], $card->getName());
-        $this->assertSame($json['desc'], $card->getDescription());
-        $this->assertSame($json['url'], $card->getUrl());
-        $this->assertSame($json['idBoard'], $card->getBoardId()->getId());
+        $this->assertSame($card1->getId(), $card2->getId());
+        $this->assertSame($card1->getName(), $card2->getName());
+        $this->assertSame($card1->getDescription(), $card2->getDescription());
+        $this->assertSame($card1->getUrl(), $card2->getUrl());
+        $this->assertSame($card1->getBoardId()->getId(), $card2->getBoardId()->getId());
+        $this->assertSame($card1->getDueDate(), $card2->getDueDate());
     }
 }

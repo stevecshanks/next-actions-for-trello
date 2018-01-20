@@ -33,7 +33,7 @@ class FeatureContext extends MinkContext implements Context
         $board = new Board(md5($boardName), $boardName);
         $card = (new CardBuilder($cardName))
             ->withBoardId($board->getId())
-            ->buildCard();
+            ->build();
         $this->fakeApiData->addBoard($board);
         $this->fakeApiData->joinCard($card);
     }
@@ -45,7 +45,7 @@ class FeatureContext extends MinkContext implements Context
     {
         $card = (new CardBuilder($name))
             ->withUrl($this->generateFakeUrlForCard($name))
-            ->buildCard();
+            ->build();
         $this->fakeApiData->addNextActionCard($card);
     }
 
@@ -57,10 +57,10 @@ class FeatureContext extends MinkContext implements Context
         $board = new Board(md5($projectName), $projectName);
         $projectCard = (new CardBuilder($projectName))
             ->linkedToProject($board->getId())
-            ->buildCard();
+            ->build();
         $card = (new CardBuilder($cardName))
             ->withBoardId($board->getId())
-            ->buildCard();
+            ->build();
 
         $this->fakeApiData->addBoard($board);
         $this->fakeApiData->addProjectCard($projectCard);
@@ -82,7 +82,7 @@ class FeatureContext extends MinkContext implements Context
     {
         $card = (new CardBuilder($name))
             ->withUrl($this->generateFakeUrlForCard($name))
-            ->buildCard();
+            ->build();
         $this->fakeApiData->addNextActionCard($card);
     }
 

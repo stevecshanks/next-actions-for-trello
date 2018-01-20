@@ -3,6 +3,7 @@
 namespace App\Tests\Trello;
 
 use App\Trello\Board;
+use App\Trello\BoardId;
 use App\Trello\Card;
 use DateTimeInterface;
 
@@ -36,21 +37,16 @@ class CardBuilder
         $this->dueDate = null;
     }
 
-    public function buildJsonArray(): array
+    public function build(): Card
     {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'desc' => $this->description,
-            'url' => $this->url,
-            'idBoard' => $this->boardId,
-            'due' => $this->dueDate ? $this->dueDate->format(DATE_ISO8601) : null,
-        ];
-    }
-
-    public function buildCard(): Card
-    {
-        return Card::fromJson((object)$this->buildJsonArray());
+        return new Card(
+            $this->id,
+            $this->name,
+            $this->description,
+            $this->url,
+            new BoardId($this->boardId),
+            $this->dueDate
+        );
     }
 
     public function withId(string $id): CardBuilder

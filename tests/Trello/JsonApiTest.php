@@ -188,5 +188,6 @@ class JsonApiTest extends TestCase
         $this->assertSame($card1->getUrl(), $card2->getUrl());
         $this->assertSame($card1->getBoardId()->getId(), $card2->getBoardId()->getId());
         $this->assertSame($card1->getDueDate(), $card2->getDueDate());
+        $this->assertSame($card1->getLabels(), $card2->getLabels());
     }
 }

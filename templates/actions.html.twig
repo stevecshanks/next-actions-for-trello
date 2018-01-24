@@ -13,6 +13,9 @@
             {% if action.dueDate %}
                 <span class="badge badge-primary badge-pill">{{ action.dueDate|date("d/m/Y") }}</span>
             {% endif %}
+            {% for label in action.labels %}
+                <span class="badge badge-info badge-pill">{{ label.name }}</span>
+            {% endfor %}
         </a>
     {% endfor %}
     </div>

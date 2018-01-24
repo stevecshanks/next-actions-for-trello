@@ -88,6 +88,17 @@ class FeatureContext extends MinkContext implements Context
     }
 
     /**
+     * @Given I have a card :cardName on my Next Actions list with the label :labelName
+     */
+    public function iHaveACardOnMyNextActionsListWithTheLabel($cardName, $labelName)
+    {
+        $card = (new CardBuilder($cardName))
+            ->withLabel($labelName)
+            ->build();
+        $this->fakeApiData->addNextActionCard($card);
+    }
+
+    /**
      * @When I view my Next Actions list
      */
     public function iViewMyNextActionsList()

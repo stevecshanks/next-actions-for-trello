@@ -5,6 +5,7 @@ namespace App\Tests\Trello;
 use App\Trello\Board;
 use App\Trello\BoardId;
 use App\Trello\Card;
+use App\Trello\Label;
 use DateTimeInterface;
 
 class CardBuilder
@@ -21,6 +22,8 @@ class CardBuilder
     protected $boardId;
     /** @var DateTimeInterface|null */
     protected $dueDate;
+    /** @var Label[] */
+    protected $labels;
 
     /**
      * CardJsonBuilder constructor.
@@ -35,6 +38,7 @@ class CardBuilder
         $this->url = Card::BASE_URL . "/{$this->id}";
         $this->boardId = md5("board-{$this->name}");
         $this->dueDate = null;
+        $this->labels = [];
     }
 
     public function build(): Card
@@ -45,7 +49,8 @@ class CardBuilder
             $this->description,
             $this->url,
             new BoardId($this->boardId),
-            $this->dueDate
+            $this->dueDate,
+            $this->labels
         );
     }
 
@@ -76,6 +81,12 @@ class CardBuilder
     public function withDueDate(DateTimeInterface $dueDate): CardBuilder
     {
         $this->dueDate = $dueDate;
+        return $this;
+    }
+
+    public function withLabel(string $labelName): CardBuilder
+    {
+        $this->labels[] = new Label($labelName);
         return $this;
     }
 

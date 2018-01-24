@@ -24,6 +24,8 @@ class Card implements JsonSerializable
     protected $boardId;
     /** @var DateTimeInterface|null */
     protected $dueDate;
+    /** @var Label[] */
+    protected $labels;
 
     /**
      * Card constructor.
@@ -33,6 +35,7 @@ class Card implements JsonSerializable
      * @param string $url
      * @param BoardId $boardId
      * @param DateTimeInterface|null $dueDate
+     * @param Label[] $labels
      */
     public function __construct(
         string $id,
@@ -40,7 +43,8 @@ class Card implements JsonSerializable
         string $description,
         string $url,
         BoardId $boardId,
-        ?DateTimeInterface $dueDate
+        ?DateTimeInterface $dueDate,
+        array $labels
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -48,17 +52,26 @@ class Card implements JsonSerializable
         $this->url = $url;
         $this->boardId = $boardId;
         $this->dueDate = $dueDate;
+        $this->labels = $labels;
     }
 
     public static function fromJson(stdClass $json)
     {
+        $labels = array_map(
+            function (stdClass $jsonLabel) {
+                return new Label($jsonLabel->name);
+            },
+            $json->labels
+        );
+
         return new static(
             $json->id,
             $json->name,
             $json->desc,
             $json->url,
             new BoardId($json->idBoard),
-            $json->due ? Chronos::createFromFormat(static::DATE_FORMAT, $json->due) : null
+            $json->due ? Chronos::createFromFormat(static::DATE_FORMAT, $json->due) : null,
+            $labels
         );
     }
 
@@ -111,10 +124,25 @@ class Card implements JsonSerializable
     }
 
     /**
+     * @return Label[]
+     */
+    public function getLabels(): array
+    {
+        return $this->labels;
+    }
+
+    /**
      * @return mixed
      */
     public function jsonSerialize()
     {
+        $labels = array_map(
+            function (Label $label) {
+                return ['name' => $label->getName()];
+            },
+            $this->labels
+        );
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -122,6 +150,7 @@ class Card implements JsonSerializable
             'url' => $this->url,
             'idBoard' => $this->boardId->getId(),
             'due' => $this->dueDate ? $this->dueDate->format(static::DATE_FORMAT) : null,
+            'labels' => $labels
         ];
     }
 }

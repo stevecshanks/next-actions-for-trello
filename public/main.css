@@ -11,3 +11,9 @@ h2 {
 .badge-pill {
     float: right;
 }
+
+.checklist-item {
+    font-size: 0.8rem;
+    display: list-item;
+    list-style: square inside;
+}

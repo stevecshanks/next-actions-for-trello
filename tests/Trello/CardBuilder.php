@@ -5,6 +5,8 @@ namespace App\Tests\Trello;
 use App\Trello\Board;
 use App\Trello\BoardId;
 use App\Trello\Card;
+use App\Trello\Checklist;
+use App\Trello\ChecklistItem;
 use App\Trello\Label;
 use DateTimeInterface;
 
@@ -24,6 +26,8 @@ class CardBuilder
     protected $dueDate;
     /** @var Label[] */
     protected $labels;
+    /** @var Checklist[] */
+    protected $checklists;
 
     /**
      * CardJsonBuilder constructor.
@@ -39,6 +43,7 @@ class CardBuilder
         $this->boardId = md5("board-{$this->name}");
         $this->dueDate = null;
         $this->labels = [];
+        $this->checklists = [];
     }
 
     public function build(): Card
@@ -50,7 +55,8 @@ class CardBuilder
             $this->url,
             new BoardId($this->boardId),
             $this->dueDate,
-            $this->labels
+            $this->labels,
+            $this->checklists
         );
     }
 
@@ -93,6 +99,17 @@ class CardBuilder
     public function linkedToProject(string $projectId): CardBuilder
     {
         $this->description = Board::BASE_URL . "/{$projectId}";
+        return $this;
+    }
+
+    public function withChecklist(array $items): CardBuilder
+    {
+        $this->checklists[] = new Checklist(array_map(
+            function (string $itemName) {
+                return new ChecklistItem($itemName, 'incomplete');
+            },
+            $items
+        ));
         return $this;
     }
 }

@@ -32,3 +32,10 @@ Feature: Link Next Actions to Trello
     When I view my Next Actions list
     Then I should see a Next Action "Improve usability"
     And I should see "Urgent"
+
+  Scenario: See first checklist item of card
+    Given I have a card "See checklists" on my Next Actions list with a checklist containing "Write a failing test, Change API call"
+    When I view my Next Actions list
+    Then I should see a Next Action "See checklists"
+    And I should see "Write a failing test"
+    And I should not see "Change API call"

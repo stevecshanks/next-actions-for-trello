@@ -99,6 +99,26 @@ class FeatureContext extends MinkContext implements Context
     }
 
     /**
+     * @Transform :items
+     */
+    public function splitChecklistItems($items)
+    {
+        return array_map('trim', explode(',', $items));
+    }
+
+
+    /**
+     * @Given I have a card :cardName on my Next Actions list with a checklist containing :items
+     */
+    public function iHaveACardOnMyNextActionsListWithAChecklistContaining($cardName, array $items)
+    {
+        $card = (new CardBuilder($cardName))
+            ->withChecklist($items)
+            ->build();
+        $this->fakeApiData->addNextActionCard($card);
+    }
+
+    /**
      * @When I view my Next Actions list
      */
     public function iViewMyNextActionsList()

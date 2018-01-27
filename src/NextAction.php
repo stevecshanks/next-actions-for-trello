@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Trello\Card;
+use App\Trello\ChecklistItem;
 use App\Trello\Label;
 use DateTimeInterface;
 
@@ -54,5 +55,17 @@ class NextAction
     {
         $this->project = $project;
         return $this;
+    }
+
+    public function getNextChecklistItem(): ?ChecklistItem
+    {
+        foreach ($this->card->getChecklists() as $checklist) {
+            foreach ($checklist->getItems() as $checklistItem) {
+                if (!$checklistItem->isComplete()) {
+                    return $checklistItem;
+                }
+            }
+        }
+        return null;
     }
 }

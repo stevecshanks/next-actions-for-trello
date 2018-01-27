@@ -34,6 +34,7 @@ class JsonApi implements Api
     {
         $uri = (new Uri(self::BASE_URL . '/members/me/cards'))
             ->withQuery(http_build_query([
+                'checklists' => 'all',
                 'key' => $this->auth->getKey(),
                 'token' => $this->auth->getToken()
             ]));
@@ -48,6 +49,7 @@ class JsonApi implements Api
     {
         $uri = (new Uri(self::BASE_URL . "/lists/{$listId->getId()}/cards"))
             ->withQuery(http_build_query([
+                'checklists' => 'all',
                 'key' => $this->auth->getKey(),
                 'token' => $this->auth->getToken()
             ]));

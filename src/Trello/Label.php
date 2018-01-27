@@ -2,7 +2,9 @@
 
 namespace App\Trello;
 
-class Label
+use JsonSerializable;
+
+class Label implements JsonSerializable
 {
     /** @var string */
     protected $name;
@@ -23,4 +25,11 @@ class Label
     {
         return $this->name;
     }
+
+    public function jsonSerialize()
+    {
+        return ['name' => $this->getName()];
+    }
+
+
 }

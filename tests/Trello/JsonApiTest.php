@@ -18,7 +18,7 @@ class JsonApiTest extends TestCase
             function (JsonApi $api) {
                 $api->fetchCardsIAmAMemberOf();
             },
-            JsonApi::BASE_URL . '/members/me/cards?key=foo&token=bar'
+            JsonApi::BASE_URL . '/members/me/cards?checklists=all&key=foo&token=bar'
         );
     }
 
@@ -46,7 +46,7 @@ class JsonApiTest extends TestCase
             function (JsonApi $api) {
                 $api->fetchCardsOnList(new ListId('123'));
             },
-            JsonApi::BASE_URL . '/lists/123/cards?key=foo&token=bar'
+            JsonApi::BASE_URL . '/lists/123/cards?checklists=all&key=foo&token=bar'
         );
     }
 

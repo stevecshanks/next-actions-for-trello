@@ -4,6 +4,7 @@ use App\NextAction;
 use App\Trello\Card;
 use App\Trello\Checklist;
 use App\Trello\ChecklistItem;
+use Cake\Chronos\Chronos;
 use PHPUnit\Framework\TestCase;
 
 class NextActionTest extends TestCase
@@ -83,5 +84,36 @@ class NextActionTest extends TestCase
         $nextAction = new NextAction($card);
 
         $this->assertSame($item2, $nextAction->getNextChecklistItem());
+    }
+
+    public function testIsOverdueReturnsFalseForCardsDueToday()
+    {
+        $dueDate = Chronos::createFromFormat('Y-m-d', '2018-01-31');
+        Chronos::setTestNow($dueDate);
+
+        $card = $this->createMock(Card::class);
+        $card->method('getDueDate')->willReturn($dueDate);
+
+        $nextAction = new NextAction($card);
+
+        $this->assertFalse($nextAction->isOverdue());
+    }
+
+    public function testIsOverdueReturnsFalseForCardsDueYesterdayToday()
+    {
+        $dueDate = Chronos::createFromFormat('Y-m-d', '2018-01-31');
+        Chronos::setTestNow($dueDate->addDay());
+
+        $card = $this->createMock(Card::class);
+        $card->method('getDueDate')->willReturn($dueDate);
+
+        $nextAction = new NextAction($card);
+
+        $this->assertTrue($nextAction->isOverdue());
+    }
+
+    protected function tearDown()
+    {
+        Chronos::setTestNow();
     }
 }

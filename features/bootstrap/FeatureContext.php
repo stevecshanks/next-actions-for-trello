@@ -169,8 +169,31 @@ class FeatureContext extends MinkContext implements Context
         $this->assertPageContainsText($name);
     }
 
+    /**
+     * @Then :cardName should have a date of :dateString
+     */
+    public function shouldHaveADateOf($cardName, $dateString)
+    {
+        $cardElement = $this->getCardElementByName($cardName);
+        assert(strpos($cardElement->getText(), $dateString) !== false);
+    }
+
+    /**
+     * @Then :cardName should be overdue
+     */
+    public function shouldBeOverdue($cardName)
+    {
+        $cardElement = $this->getCardElementByName($cardName);
+        assert($cardElement->find('css', '.badge-danger'));
+    }
+
     protected function generateFakeUrlForCard(string $cardName): string
     {
         return '/actions?testcard=' . urlencode($cardName);
+    }
+
+    protected function getCardElementByName($cardName)
+    {
+        return $this->getSession()->getPage()->find('named', ['link', $cardName]);
     }
 }

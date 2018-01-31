@@ -21,12 +21,6 @@ Feature: Link Next Actions to Trello
     Then I should see the Project "Improve usability"
     And I should see a Next Action "See board name"
 
-  Scenario: See due date of card
-    Given I have a card "Improve usability" on my Next Actions list with a due date of "01/02/2018"
-    When I view my Next Actions list
-    Then I should see a Next Action "Improve usability"
-    And I should see "01/02/2018"
-
   Scenario: See labels of card
     Given I have a card "Improve usability" on my Next Actions list with the label "Urgent"
     When I view my Next Actions list

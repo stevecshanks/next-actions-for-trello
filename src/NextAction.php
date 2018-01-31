@@ -5,6 +5,7 @@ namespace App;
 use App\Trello\Card;
 use App\Trello\ChecklistItem;
 use App\Trello\Label;
+use Cake\Chronos\Chronos;
 use DateTimeInterface;
 
 class NextAction
@@ -67,5 +68,10 @@ class NextAction
             }
         }
         return null;
+    }
+
+    public function isOverdue(): bool
+    {
+        return $this->getDueDate() < Chronos::now();
     }
 }

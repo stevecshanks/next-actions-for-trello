@@ -86,30 +86,56 @@ class NextActionTest extends TestCase
         $this->assertSame($item2, $nextAction->getNextChecklistItem());
     }
 
-    public function testIsOverdueReturnsFalseForCardsDueToday()
+    public function testIsOverdueReturnsFalseForCardsDueLaterToday()
     {
-        $dueDate = Chronos::createFromFormat('Y-m-d', '2018-01-31');
-        Chronos::setTestNow($dueDate);
+        $now = Chronos::createFromFormat('Y-m-d', '2018-01-31');
+        Chronos::setTestNow($now);
 
         $card = $this->createMock(Card::class);
-        $card->method('getDueDate')->willReturn($dueDate);
+        $card->method('getDueDate')->willReturn($now->addHour());
 
         $nextAction = new NextAction($card);
 
         $this->assertFalse($nextAction->isOverdue());
     }
 
-    public function testIsOverdueReturnsFalseForCardsDueYesterdayToday()
+    public function testIsOverdueReturnsTrueForCardsDueNow()
     {
-        $dueDate = Chronos::createFromFormat('Y-m-d', '2018-01-31');
-        Chronos::setTestNow($dueDate->addDay());
+        $now = Chronos::createFromFormat('Y-m-d', '2018-01-31');
+        Chronos::setTestNow($now);
 
         $card = $this->createMock(Card::class);
-        $card->method('getDueDate')->willReturn($dueDate);
+        $card->method('getDueDate')->willReturn($now);
 
         $nextAction = new NextAction($card);
 
         $this->assertTrue($nextAction->isOverdue());
+    }
+
+    public function testIsDueSoonReturnsFalseForCardsDueInTwoDays()
+    {
+        $today = Chronos::createFromFormat('Y-m-d', '2018-01-31');
+        Chronos::setTestNow($today);
+
+        $card = $this->createMock(Card::class);
+        $card->method('getDueDate')->willReturn($today->addDays(2));
+
+        $nextAction = new NextAction($card);
+
+        $this->assertFalse($nextAction->isDueSoon());
+    }
+
+    public function testIsDueSoonReturnsTrueForCardsDueTomorrow()
+    {
+        $today = Chronos::createFromFormat('Y-m-d', '2018-01-31');
+        Chronos::setTestNow($today);
+
+        $card = $this->createMock(Card::class);
+        $card->method('getDueDate')->willReturn($today->addDay());
+
+        $nextAction = new NextAction($card);
+
+        $this->assertTrue($nextAction->isDueSoon());
     }
 
     protected function tearDown()

@@ -72,6 +72,12 @@ class NextAction
 
     public function isOverdue(): bool
     {
-        return $this->getDueDate() < Chronos::now();
+        return $this->getDueDate() <= Chronos::now();
+    }
+
+    public function isDueSoon(): bool
+    {
+        // Don't use Chronos::tomorrow - it doesn't have a time component and we want to return anything due in 24 hours
+        return $this->getDueDate() <= Chronos::now()->addDay();
     }
 }

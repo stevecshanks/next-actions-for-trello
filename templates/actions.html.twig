@@ -11,7 +11,13 @@
             {% endif %}
             {{ action.name }}
             {% if action.dueDate %}
-                <span class="badge {{ action.isOverdue ? 'badge-danger' : 'badge-primary' }} badge-pill">
+                {% set badgeLevel = 'badge-primary' %}
+                {% if action.isOverdue %}
+                    {% set badgeLevel = 'badge-danger' %}
+                {% elseif action.isDueSoon %}
+                    {% set badgeLevel = 'badge-warning' %}
+                {% endif %}
+                <span class="badge {{ badgeLevel }} badge-pill">
                     {{ action.dueDate|date("d/m/Y") }}
                 </span>
             {% endif %}

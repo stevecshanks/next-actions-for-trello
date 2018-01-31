@@ -106,7 +106,6 @@ class FeatureContext extends MinkContext implements Context
         return array_map('trim', explode(',', $items));
     }
 
-
     /**
      * @Given I have a card :cardName on my Next Actions list with a checklist containing :items
      */
@@ -116,6 +115,14 @@ class FeatureContext extends MinkContext implements Context
             ->withChecklist($items)
             ->build();
         $this->fakeApiData->addNextActionCard($card);
+    }
+
+    /**
+     * @Given the current date is :date
+     */
+    public function theCurrentDateIs(DateTimeInterface $date)
+    {
+        Chronos::setTestNow($date);
     }
 
     /**
@@ -185,6 +192,23 @@ class FeatureContext extends MinkContext implements Context
     {
         $cardElement = $this->getCardElementByName($cardName);
         assert($cardElement->find('css', '.badge-danger'));
+    }
+
+    /**
+     * @Then :cardName should be due soon
+     */
+    public function shouldBeDueSoon($cardName)
+    {
+        $cardElement = $this->getCardElementByName($cardName);
+        assert($cardElement->find('css', '.badge-warning'));
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function tearDown()
+    {
+        Chronos::setTestNow();
     }
 
     protected function generateFakeUrlForCard(string $cardName): string

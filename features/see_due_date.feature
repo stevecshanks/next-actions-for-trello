@@ -15,3 +15,11 @@ Feature: See the due date of cards on Trello
     Then I should see a Next Action "See due date"
     And "See due date" should have a date of "01/01/2000"
     And "See due date" should be overdue
+
+  Scenario: Highlight cards due in next 24 hours
+    Given the current date is "01/01/2018"
+    And I have a card "See due date" on my Next Actions list with a due date of "02/01/2018"
+    When I view my Next Actions list
+    Then I should see a Next Action "See due date"
+    And "See due date" should have a date of "02/01/2018"
+    And "See due date" should be due soon

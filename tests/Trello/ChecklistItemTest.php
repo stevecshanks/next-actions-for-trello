@@ -9,13 +9,13 @@ class ChecklistItemTest extends TestCase
 {
     public function testFromJsonConstructsObjectCorrectly()
     {
-        $json = [
+        $json = json_encode([
             'name' => 'Test',
             'state' => ChecklistItem::COMPLETE,
             'pos' => 99
-        ];
+        ]);
 
-        $item = ChecklistItem::fromJson((object) $json);
+        $item = ChecklistItem::fromJson(json_decode($json));
 
         $this->assertSame('Test', $item->getName());
         $this->assertSame(true, $item->isComplete());

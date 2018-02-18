@@ -3,6 +3,7 @@
 namespace App\Trello;
 
 use JsonSerializable;
+use stdClass;
 
 class Checklist implements JsonSerializable
 {
@@ -20,6 +21,14 @@ class Checklist implements JsonSerializable
     {
         $this->items = $items;
         $this->position = $position;
+    }
+
+    public static function fromJson(stdClass $json): Checklist
+    {
+        return new Checklist(
+            array_map([ChecklistItem::class, 'fromJson'], $json->checkItems),
+            $json->pos
+        );
     }
 
     /**

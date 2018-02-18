@@ -4,6 +4,8 @@ use App\Tests\Trello\CardBuilder;
 use App\Tests\Trello\DataSource;
 use App\Tests\Trello\FakeJsonApi;
 use App\Trello\Board;
+use App\Trello\Checklist;
+use App\Trello\ChecklistItem;
 use Behat\Behat\Context\Context;
 use Behat\MinkExtension\Context\MinkContext;
 use Cake\Chronos\Chronos;
@@ -111,8 +113,16 @@ class FeatureContext extends MinkContext implements Context
      */
     public function iHaveACardOnMyNextActionsListWithAChecklistContaining($cardName, array $items)
     {
+        $checklistItems = array_map(
+            function (string $itemName) {
+                return new ChecklistItem($itemName, 'incomplete', 0);
+            },
+            $items
+        );
+        $checklist = new Checklist($checklistItems, 0);
+
         $card = (new CardBuilder($cardName))
-            ->withChecklist($items)
+            ->withChecklist($checklist)
             ->build();
         $this->fakeApiData->addNextActionCard($card);
     }

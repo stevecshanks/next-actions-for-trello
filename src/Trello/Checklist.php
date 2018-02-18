@@ -8,14 +8,18 @@ class Checklist implements JsonSerializable
 {
     /** @var ChecklistItem[] */
     protected $items;
+    /** @var int */
+    protected $position;
 
     /**
      * Checklist constructor.
      * @param ChecklistItem[] $items
+     * @param int $position
      */
-    public function __construct(array $items)
+    public function __construct(array $items, int $position)
     {
         $this->items = $items;
+        $this->position = $position;
     }
 
     /**
@@ -32,6 +36,14 @@ class Checklist implements JsonSerializable
         return $this->items;
     }
 
+    /**
+     * @return int
+     */
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
     public function jsonSerialize()
     {
         return [
@@ -40,7 +52,8 @@ class Checklist implements JsonSerializable
                     return $item->jsonSerialize();
                 },
                 $this->items
-            )
+            ),
+            'pos' => $this->position,
         ];
     }
 }

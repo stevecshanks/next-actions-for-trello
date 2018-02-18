@@ -70,16 +70,19 @@ class Card implements JsonSerializable
         );
         $checklists = array_map(
             function (stdClass $jsonChecklist) {
-                return new Checklist(array_map(
-                    function (stdClass $jsonChecklistItem) {
-                        return new ChecklistItem(
-                            $jsonChecklistItem->name,
-                            $jsonChecklistItem->state,
-                            $jsonChecklistItem->pos
-                        );
-                    },
-                    $jsonChecklist->checkItems
-                ));
+                return new Checklist(
+                    array_map(
+                        function (stdClass $jsonChecklistItem) {
+                            return new ChecklistItem(
+                                $jsonChecklistItem->name,
+                                $jsonChecklistItem->state,
+                                $jsonChecklistItem->pos
+                            );
+                        },
+                        $jsonChecklist->checkItems
+                    ),
+                    $jsonChecklist->pos
+                );
             },
             $json->checklists
         );
@@ -157,6 +160,12 @@ class Card implements JsonSerializable
      */
     public function getChecklists(): array
     {
+        usort(
+            $this->checklists,
+            function (Checklist $checklist1, Checklist $checklist2) {
+                return $checklist1->getPosition() <=> $checklist2->getPosition();
+            }
+        );
         return $this->checklists;
     }
 

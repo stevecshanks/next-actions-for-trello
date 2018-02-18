@@ -71,16 +71,7 @@ class Card implements JsonSerializable
         $checklists = array_map(
             function (stdClass $jsonChecklist) {
                 return new Checklist(
-                    array_map(
-                        function (stdClass $jsonChecklistItem) {
-                            return new ChecklistItem(
-                                $jsonChecklistItem->name,
-                                $jsonChecklistItem->state,
-                                $jsonChecklistItem->pos
-                            );
-                        },
-                        $jsonChecklist->checkItems
-                    ),
+                    array_map([ChecklistItem::class, 'fromJson'], $jsonChecklist->checkItems),
                     $jsonChecklist->pos
                 );
             },

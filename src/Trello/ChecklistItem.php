@@ -3,9 +3,13 @@
 namespace App\Trello;
 
 use JsonSerializable;
+use stdClass;
 
 class ChecklistItem implements JsonSerializable
 {
+    const INCOMPLETE = 'incomplete';
+    const COMPLETE = 'complete';
+
     /** @var string */
     protected $name;
     /** @var string */
@@ -24,6 +28,15 @@ class ChecklistItem implements JsonSerializable
         $this->name = $name;
         $this->state = $state;
         $this->position = $position;
+    }
+
+    public static function fromJson(stdClass $json): ChecklistItem
+    {
+        return new ChecklistItem(
+            $json->name,
+            $json->state,
+            $json->pos
+        );
     }
 
     /**
@@ -47,7 +60,7 @@ class ChecklistItem implements JsonSerializable
      */
     public function isComplete(): bool
     {
-        return $this->state === 'complete';
+        return $this->state === static::COMPLETE;
     }
 
     public function jsonSerialize()

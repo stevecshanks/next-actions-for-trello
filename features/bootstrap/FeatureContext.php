@@ -115,7 +115,7 @@ class FeatureContext extends MinkContext implements Context
     {
         $checklistItems = array_map(
             function (string $itemName) {
-                return new ChecklistItem($itemName, 'incomplete', 0);
+                return new ChecklistItem($itemName, ChecklistItem::INCOMPLETE, 0);
             },
             $items
         );

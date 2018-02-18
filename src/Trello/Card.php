@@ -62,14 +62,6 @@ class Card implements JsonSerializable
 
     public static function fromJson(stdClass $json)
     {
-        $labels = array_map(
-            function (stdClass $jsonLabel) {
-                return new Label($jsonLabel->name);
-            },
-            $json->labels
-        );
-        $checklists = array_map([Checklist::class, 'fromJson'], $json->checklists);
-
         return new static(
             $json->id,
             $json->name,
@@ -77,8 +69,8 @@ class Card implements JsonSerializable
             $json->url,
             new BoardId($json->idBoard),
             $json->due ? Chronos::createFromFormat(static::DATE_FORMAT, $json->due) : null,
-            $labels,
-            $checklists
+            array_map([Label::class, 'fromJson'], $json->labels),
+            array_map([Checklist::class, 'fromJson'], $json->checklists)
         );
     }
 

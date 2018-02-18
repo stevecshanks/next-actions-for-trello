@@ -3,6 +3,7 @@
 namespace App\Trello;
 
 use JsonSerializable;
+use stdClass;
 
 class Label implements JsonSerializable
 {
@@ -16,6 +17,11 @@ class Label implements JsonSerializable
     public function __construct(string $name)
     {
         $this->name = $name;
+    }
+
+    public static function fromJson(stdClass $json): Label
+    {
+        return new Label($json->name);
     }
 
     /**

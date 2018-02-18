@@ -6,7 +6,7 @@ use App\Trello\Card;
 use App\Trello\ChecklistItem;
 use App\Trello\Label;
 use Cake\Chronos\Chronos;
-use DateTimeInterface;
+use Cake\Chronos\ChronosInterface;
 
 class NextAction
 {
@@ -39,7 +39,7 @@ class NextAction
         return $this->project;
     }
 
-    public function getDueDate(): ?DateTimeInterface
+    public function getDueDate(): ?ChronosInterface
     {
         return $this->card->getDueDate();
     }
@@ -72,12 +72,12 @@ class NextAction
 
     public function isOverdue(): bool
     {
-        return $this->getDueDate() <= Chronos::now();
+        return $this->getDueDate()->lte(Chronos::now());
     }
 
     public function isDueSoon(): bool
     {
         // Don't use Chronos::tomorrow - it doesn't have a time component and we want to return anything due in 24 hours
-        return $this->getDueDate() <= Chronos::now()->addDay();
+        return $this->getDueDate()->lte(Chronos::now()->addDay());
     }
 }

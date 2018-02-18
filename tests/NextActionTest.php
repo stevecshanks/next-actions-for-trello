@@ -86,24 +86,6 @@ class NextActionTest extends TestCase
         $this->assertSame($item2, $nextAction->getNextChecklistItem());
     }
 
-    public function testGetNextChecklistItemUsesCorrectOrderForItems()
-    {
-        $item1 = $this->createMock(ChecklistItem::class);
-        $item1->method('getPosition')->willReturn(999);
-        $item2 = $this->createMock(ChecklistItem::class);
-        $item2->method('getPosition')->willReturn(1);
-
-        $checklist = $this->createMock(Checklist::class);
-        $checklist->method('getItems')->willReturn([$item1, $item2]);
-
-        $card = $this->createMock(Card::class);
-        $card->method('getChecklists')->willReturn([$checklist]);
-
-        $nextAction = new NextAction($card);
-
-        $this->assertSame($item2, $nextAction->getNextChecklistItem());
-    }
-
     public function testIsOverdueReturnsFalseForCardsDueLaterToday()
     {
         $now = Chronos::createFromFormat('Y-m-d', '2018-01-31');

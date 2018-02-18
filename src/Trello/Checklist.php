@@ -23,6 +23,12 @@ class Checklist implements JsonSerializable
      */
     public function getItems(): array
     {
+        usort(
+            $this->items,
+            function (ChecklistItem $item1, ChecklistItem $item2) {
+                return $item1->getPosition() <=> $item2->getPosition();
+            }
+        );
         return $this->items;
     }
 

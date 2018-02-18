@@ -149,19 +149,6 @@ class Card implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        $labels = array_map(
-            function (Label $label) {
-                return $label->jsonSerialize();
-            },
-            $this->labels
-        );
-        $checklists = array_map(
-            function (Checklist $checklist) {
-                return $checklist->jsonSerialize();
-            },
-            $this->checklists
-        );
-
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -169,8 +156,8 @@ class Card implements JsonSerializable
             'url' => $this->url,
             'idBoard' => $this->boardId->getId(),
             'due' => $this->dueDate ? $this->dueDate->format(static::DATE_FORMAT) : null,
-            'labels' => $labels,
-            'checklists' => $checklists
+            'labels' => $this->labels,
+            'checklists' => $this->checklists
         ];
     }
 }

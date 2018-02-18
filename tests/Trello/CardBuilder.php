@@ -105,9 +105,10 @@ class CardBuilder
     public function withChecklist(array $items): CardBuilder
     {
         $this->checklists[] = new Checklist(array_map(
-            function (string $itemName) {
-                return new ChecklistItem($itemName, 'incomplete');
+            function (int $key, string $itemName) {
+                return new ChecklistItem($itemName, 'incomplete', $key);
             },
+            array_keys($items),
             $items
         ));
         return $this;

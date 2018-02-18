@@ -61,7 +61,14 @@ class NextAction
     public function getNextChecklistItem(): ?ChecklistItem
     {
         foreach ($this->card->getChecklists() as $checklist) {
-            foreach ($checklist->getItems() as $checklistItem) {
+            $items = $checklist->getItems();
+            usort(
+                $items,
+                function (ChecklistItem $item1, ChecklistItem $item2) {
+                    return $item1->getPosition() <=> $item2->getPosition();
+                }
+            );
+            foreach ($items as $checklistItem) {
                 if (!$checklistItem->isComplete()) {
                     return $checklistItem;
                 }

@@ -72,7 +72,11 @@ class Card implements JsonSerializable
             function (stdClass $jsonChecklist) {
                 return new Checklist(array_map(
                     function (stdClass $jsonChecklistItem) {
-                        return new ChecklistItem($jsonChecklistItem->name, $jsonChecklistItem->state);
+                        return new ChecklistItem(
+                            $jsonChecklistItem->name,
+                            $jsonChecklistItem->state,
+                            $jsonChecklistItem->pos
+                        );
                     },
                     $jsonChecklist->checkItems
                 ));

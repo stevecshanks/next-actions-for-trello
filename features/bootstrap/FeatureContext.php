@@ -1,7 +1,5 @@
 <?php
 
-require_once(__DIR__ . '/../../vendor/bin/.phpunit/phpunit-5.7/vendor/autoload.php');
-
 use App\Tests\Trello\CardBuilder;
 use App\Tests\Trello\DataSource;
 use App\Tests\Trello\FakeJsonApi;

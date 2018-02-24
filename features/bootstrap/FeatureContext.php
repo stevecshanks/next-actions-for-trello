@@ -1,5 +1,7 @@
 <?php
 
+require_once(__DIR__ . '/../../vendor/bin/.phpunit/phpunit-5.7/vendor/autoload.php');
+
 use App\Tests\Trello\CardBuilder;
 use App\Tests\Trello\DataSource;
 use App\Tests\Trello\FakeJsonApi;
@@ -9,6 +11,7 @@ use App\Trello\ChecklistItem;
 use Behat\Behat\Context\Context;
 use Behat\MinkExtension\Context\MinkContext;
 use Cake\Chronos\Chronos;
+use PHPUnit\Framework\Assert;
 
 /**
  * Defines application features from the specific context.
@@ -175,7 +178,7 @@ class FeatureContext extends MinkContext implements Context
         $currentUrl = $this->getSession()->getCurrentUrl();
         $expectedUrl = $this->generateFakeUrlForCard($cardName);
 
-        assert(strpos($currentUrl, $expectedUrl) !== false);
+        Assert::assertContains($expectedUrl, $currentUrl);
     }
 
     /**
@@ -192,7 +195,7 @@ class FeatureContext extends MinkContext implements Context
     public function shouldHaveADateOf($cardName, $dateString)
     {
         $cardElement = $this->getCardElementByName($cardName);
-        assert(strpos($cardElement->getText(), $dateString) !== false);
+        Assert::assertContains($dateString, $cardElement->getText());
     }
 
     /**
@@ -201,7 +204,7 @@ class FeatureContext extends MinkContext implements Context
     public function shouldBeOverdue($cardName)
     {
         $cardElement = $this->getCardElementByName($cardName);
-        assert($cardElement->find('css', '.badge-danger'));
+        Assert::assertNotNull($cardElement->find('css', '.badge-danger'));
     }
 
     /**
@@ -210,7 +213,7 @@ class FeatureContext extends MinkContext implements Context
     public function shouldBeDueSoon($cardName)
     {
         $cardElement = $this->getCardElementByName($cardName);
-        assert($cardElement->find('css', '.badge-warning'));
+        Assert::assertNotNull($cardElement->find('css', '.badge-warning'));
     }
 
     /**

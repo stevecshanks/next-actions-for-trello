@@ -33,11 +33,27 @@ class NextActionsLookup
      */
     public function lookup(): array
     {
-        return array_merge(
+        $results = array_merge(
             $this->fetchNextActionsIAmAMemberOf(),
             $this->fetchManuallyCreatedNextActions(),
             $this->fetchProjectNextActions()
         );
+
+        usort(
+            $results,
+            function (NextAction $nextAction1, NextAction $nextAction2) {
+                if ($nextAction1->getDueDate() && $nextAction2->getDueDate()) {
+                    return $nextAction1->getDueDate()->getTimestamp() <=> $nextAction2->getDueDate()->getTimestamp();
+                } elseif ($nextAction1->getDueDate()) {
+                    return -1;
+                } elseif ($nextAction2->getDueDate()) {
+                    return 1;
+                }
+                return 0;
+            }
+        );
+
+        return $results;
     }
 
     protected function fetchNextActionsIAmAMemberOf()

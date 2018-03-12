@@ -12,6 +12,7 @@ use App\Trello\Board;
 use App\Trello\BoardId;
 use App\Trello\Config;
 use App\Trello\ListId;
+use Cake\Chronos\Chronos;
 use PHPUnit\Framework\TestCase;
 
 class NextActionsLookupTest extends TestCase
@@ -130,5 +131,28 @@ class NextActionsLookupTest extends TestCase
         $this->assertContainsOnlyInstancesOf(NextAction::class, $results);
         $this->assertSame('Test 1', $results[0]->getName());
         $this->assertSame('Test 2', $results[1]->getName());
+    }
+
+    public function testItReturnsNextActionsInDueDateOrder()
+    {
+        $api = $this->createMock(Api::class);
+        $api->method('fetchCardsIAmAMemberOf')->willReturn([
+            (new CardBuilder('Today'))->withDueDate(Chronos::today())->build(),
+            (new CardBuilder('No date'))->build(),
+            (new CardBuilder('Yesterday'))->withDueDate(Chronos::yesterday())->build(),
+        ]);
+        $api->method('fetchBoard')->willReturn(new Board('1', 'Test'));
+
+        $lookup = new NextActionsLookup(
+            $api,
+            $this->createMock(NextActionForProjectLookup::class),
+            $this->createMock(Config::class)
+        );
+
+        $results = $lookup->lookup();
+        $this->assertCount(3, $results);
+        $this->assertSame('Yesterday', $results[0]->getName());
+        $this->assertSame('Today', $results[1]->getName());
+        $this->assertSame('No date', $results[2]->getName());
     }
 }

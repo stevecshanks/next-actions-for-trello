@@ -4,30 +4,33 @@
 
 {% block main %}
     <div class="list-group">
-    {% for action in nextActions %}
-        <a href="{{ action.url }}" class="list-group-item list-group-item-action flex-column align-items-start">
-            {% if action.project %}
-                <h2>{{ action.project.name }}</h2> -
-            {% endif %}
-            {{ action.name }}
-            {% if action.dueDate %}
-                {% set badgeLevel = 'badge-primary' %}
-                {% if action.isOverdue %}
-                    {% set badgeLevel = 'badge-danger' %}
-                {% elseif action.isDueSoon %}
-                    {% set badgeLevel = 'badge-warning' %}
+        {% for action in nextActions %}
+            <a href="{{ action.url }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="icon-container">
+                    <img src="{{ action.imageUrl }}" />
+                </div>
+                {% if action.project %}
+                    <h2>{{ action.project.name }}</h2> -
                 {% endif %}
-                <span class="badge {{ badgeLevel }} badge-pill">
+                {{ action.name }}
+                {% if action.dueDate %}
+                    {% set badgeLevel = 'badge-primary' %}
+                    {% if action.isOverdue %}
+                        {% set badgeLevel = 'badge-danger' %}
+                    {% elseif action.isDueSoon %}
+                        {% set badgeLevel = 'badge-warning' %}
+                    {% endif %}
+                    <span class="badge {{ badgeLevel }} badge-pill">
                     {{ action.dueDate|date("d/m/Y") }}
                 </span>
-            {% endif %}
-            {% for label in action.labels %}
-                <span class="badge badge-info badge-pill">{{ label.name }}</span>
-            {% endfor %}
-            {% if action.nextChecklistItem %}
-                <div class="checklist-item">{{ action.nextChecklistItem.name }}</div>
-            {% endif %}
-        </a>
-    {% endfor %}
+                {% endif %}
+                {% for label in action.labels %}
+                    <span class="badge badge-info badge-pill">{{ label.name }}</span>
+                {% endfor %}
+                {% if action.nextChecklistItem %}
+                    <div class="checklist-item">{{ action.nextChecklistItem.name }}</div>
+                {% endif %}
+            </a>
+        {% endfor %}
     </div>
 {% endblock %}

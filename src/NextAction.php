@@ -70,6 +70,11 @@ class NextAction
         return null;
     }
 
+    public function getImageUrl(): string
+    {
+        return 'https://trello-backgrounds.s3.amazonaws.com/SharedBackground/140x100/28dc90b5fddefcc3dbfdcf6bdc5aa4f6/photo-1484480974693-6ca0a78fb36b.jpg';
+    }
+
     public function isOverdue(): bool
     {
         return $this->getDueDate()->lte(Chronos::now());

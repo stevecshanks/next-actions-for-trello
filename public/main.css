@@ -15,3 +15,19 @@ h2 {
 .checklist-item {
     font-size: 0.8rem;
 }
+
+.icon-container {
+    height: 60px;
+    width: 60px;
+    overflow: hidden;
+    float: left;
+    margin-right: 0.5rem;
+}
+
+.icon-container img {
+    object-position: center;
+}
+
+.list-group-item {
+    padding: 0.25rem 1.25rem 0.25rem 0.25rem;
+}

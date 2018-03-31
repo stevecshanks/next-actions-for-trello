@@ -181,6 +181,20 @@ class JsonApiTest extends TestCase
         $this->assertSame('a url', $result->getBackgroundImageUrl());
     }
 
+    public function testFetchBoardDoesNotMakeMultipleRequestsToSameBoard()
+    {
+        $client = (new MockClientBuilder())
+            ->withResponse(json_encode(['id' => '123', 'name' => 'a board']))
+            ->build();
+
+        $api = new JsonApi($client, $this->createMock(Config::class));
+
+        $this->assertSame(
+            $api->fetchBoard(new BoardId('123')),
+            $api->fetchBoard(new BoardId('123'))
+        );
+    }
+
     public function testCardsAreCreatedWithCorrectBoard()
     {
         $cardJson = json_encode([

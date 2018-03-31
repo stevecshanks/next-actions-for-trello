@@ -15,6 +15,8 @@ class JsonApi implements Api
     protected $client;
     /** @var Config */
     protected $auth;
+    /** @var array */
+    protected $boardCache;
 
     /**
      * JsonApi constructor.
@@ -25,6 +27,7 @@ class JsonApi implements Api
     {
         $this->client = $client;
         $this->auth = $auth;
+        $this->boardCache = [];
     }
 
     /**
@@ -62,6 +65,10 @@ class JsonApi implements Api
      */
     public function fetchBoard(BoardId $boardId): ?Board
     {
+        if (isset($this->boardCache[$boardId->getId()])) {
+            return $this->boardCache[$boardId->getId()];
+        }
+
         $uri = (new Uri(self::BASE_URL . "/boards/{$boardId->getId()}"))
             ->withQuery(http_build_query([
                 'key' => $this->auth->getKey(),
@@ -71,15 +78,19 @@ class JsonApi implements Api
         $json = Json::fromString($response->getBody());
 
         $boardJson = $json->decode();
+        $board = null;
+
         if ($boardJson) {
-            return new Board(
+            $board = new Board(
                 $boardJson->id,
                 $boardJson->name,
                 $boardJson->prefs->backgroundImageScaled[0]->url ?? null
             );
         }
 
-        return null;
+        $this->boardCache[$boardId->getId()] = $board;
+
+        return $board;
     }
 
     /**

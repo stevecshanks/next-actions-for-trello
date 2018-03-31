@@ -72,7 +72,11 @@ class JsonApi implements Api
 
         $boardJson = $json->decode();
         if ($boardJson) {
-            return new Board($boardJson->id, $boardJson->name);
+            return new Board(
+                $boardJson->id,
+                $boardJson->name,
+                $boardJson->prefs->backgroundImageScaled[0]->url ?? null
+            );
         }
 
         return null;

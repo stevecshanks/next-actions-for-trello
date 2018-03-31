@@ -145,7 +145,8 @@ class JsonApiTest extends TestCase
         $client = (new MockClientBuilder())
             ->withResponse(json_encode([
                 'id' => '123',
-                'name' => 'My Board'
+                'name' => 'My Board',
+                'prefs' => ['backgroundImageScaled' => null]
             ]))
             ->build();
         $api = new JsonApi($client, $this->createMock(Config::class));
@@ -154,6 +155,28 @@ class JsonApiTest extends TestCase
 
         $this->assertSame('123', $result->getId());
         $this->assertSame('My Board', $result->getName());
+        $this->assertNull($result->getBackgroundImageUrl());
+    }
+
+    public function testFetchBoardReturnsFirstBackgroundImageUrlIfSet()
+    {
+        $client = (new MockClientBuilder())
+            ->withResponse(json_encode([
+                'id' => '123',
+                'name' => 'My Board',
+                'prefs' => [
+                    'backgroundImageScaled' => [
+                        ['url' => 'a url'],
+                        ['url' => 'another url']
+                    ]
+                ]
+            ]))
+            ->build();
+        $api = new JsonApi($client, $this->createMock(Config::class));
+
+        $result = $api->fetchBoard(new BoardId('123'));
+
+        $this->assertSame('a url', $result->getBackgroundImageUrl());
     }
 
     protected function assertApiMethodMakesRequestToUrl(callable $callMethod, string $url)

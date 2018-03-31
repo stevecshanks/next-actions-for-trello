@@ -8,16 +8,20 @@ class Board extends BoardId
 
     /** @var string */
     protected $name;
+    /** @var string|null */
+    protected $backgroundImageUrl;
 
     /**
      * Board constructor.
      * @param string $id
      * @param string $name
+     * @param null|string $backgroundImageUrl
      */
-    public function __construct(string $id, string $name)
+    public function __construct(string $id, string $name, ?string $backgroundImageUrl = null)
     {
         parent::__construct($id);
         $this->name = $name;
+        $this->backgroundImageUrl = $backgroundImageUrl;
     }
 
     /**
@@ -27,4 +31,14 @@ class Board extends BoardId
     {
         return $this->name;
     }
+
+    /**
+     * @return null|string
+     */
+    public function getBackgroundImageUrl(): ?string
+    {
+        return $this->backgroundImageUrl;
+    }
+
+
 }

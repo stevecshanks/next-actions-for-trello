@@ -2,6 +2,8 @@
 
 namespace App\Tests\Trello;
 
+use App\Trello\Board;
+use App\Trello\Card;
 use App\Trello\Checklist;
 use PHPUnit\Framework\TestCase;
 
@@ -20,5 +22,14 @@ class CardTest extends TestCase
             ->build();
 
         $this->assertSame([$checklist2, $checklist1], $card->getChecklists());
+    }
+
+    public function testFromJsonStoresBoardIfSpecified()
+    {
+        $json = json_encode((new CardBuilder('Test'))->build());
+        $board = $this->createMock(Board::class);
+
+        $card = Card::fromJson(json_decode($json), $board);
+        $this->assertSame($board, $card->getBoard());
     }
 }

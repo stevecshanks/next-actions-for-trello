@@ -22,6 +22,8 @@ class Card implements JsonSerializable
     protected $url;
     /** @var BoardId */
     protected $boardId;
+    /** @var Board */
+    protected $board;
     /** @var DateTimeInterface|null */
     protected $dueDate;
     /** @var Label[] */
@@ -36,6 +38,7 @@ class Card implements JsonSerializable
      * @param string $description
      * @param string $url
      * @param BoardId $boardId
+     * @param Board $board
      * @param DateTimeInterface|null $dueDate
      * @param Label[] $labels
      * @param Checklist[] $checklists
@@ -46,6 +49,7 @@ class Card implements JsonSerializable
         string $description,
         string $url,
         BoardId $boardId,
+        Board $board,
         ?DateTimeInterface $dueDate,
         array $labels,
         array $checklists
@@ -54,13 +58,14 @@ class Card implements JsonSerializable
         $this->name = $name;
         $this->description = $description;
         $this->url = $url;
+        $this->board = $board;
         $this->boardId = $boardId;
         $this->dueDate = $dueDate;
         $this->labels = $labels;
         $this->checklists = $checklists;
     }
 
-    public static function fromJson(stdClass $json)
+    public static function fromJson(stdClass $json, Board $board = null)
     {
         return new static(
             $json->id,
@@ -68,6 +73,7 @@ class Card implements JsonSerializable
             $json->desc,
             $json->url,
             new BoardId($json->idBoard),
+            $board,
             $json->due ? Chronos::createFromFormat(static::DATE_FORMAT, $json->due) : null,
             array_map([Label::class, 'fromJson'], $json->labels),
             array_map([Checklist::class, 'fromJson'], $json->checklists)
@@ -142,6 +148,14 @@ class Card implements JsonSerializable
             }
         );
         return $this->checklists;
+    }
+
+    /**
+     * @return Board
+     */
+    public function getBoard(): Board
+    {
+        return $this->board;
     }
 
     /**

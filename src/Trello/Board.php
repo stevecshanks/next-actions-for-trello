@@ -17,7 +17,7 @@ class Board extends BoardId
      * @param string $name
      * @param null|string $backgroundImageUrl
      */
-    public function __construct(string $id, string $name, ?string $backgroundImageUrl = null)
+    public function __construct(string $id, string $name, ?string $backgroundImageUrl)
     {
         parent::__construct($id);
         $this->name = $name;

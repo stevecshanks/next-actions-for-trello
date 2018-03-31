@@ -28,9 +28,9 @@ class NextActionsLookupTest extends TestCase
             function (BoardId $boardId) {
                 switch ($boardId->getId()) {
                     case 'abc':
-                        return new Board($boardId->getId(), 'Board 1');
+                        return new Board($boardId->getId(), 'Board 1', null);
                     case 'def':
-                        return new Board($boardId->getId(), 'Board 2');
+                        return new Board($boardId->getId(), 'Board 2', null);
                     default:
                         return null;
                 }
@@ -141,7 +141,7 @@ class NextActionsLookupTest extends TestCase
             (new CardBuilder('No date'))->build(),
             (new CardBuilder('Yesterday'))->withDueDate(Chronos::yesterday())->build(),
         ]);
-        $api->method('fetchBoard')->willReturn(new Board('1', 'Test'));
+        $api->method('fetchBoard')->willReturn($this->createMock(Board::class));
 
         $lookup = new NextActionsLookup(
             $api,

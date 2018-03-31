@@ -54,7 +54,7 @@ class DataSourceTest extends TestCase
 
     public function testGetBoardByIdReturnsCorrectBoard()
     {
-        $board = new Board('some id', 'a name');
+        $board = new Board('some id', 'a name', 'a url');
 
         $dataSource = new DataSource();
         $dataSource->addBoard($board);

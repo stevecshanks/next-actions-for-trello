@@ -34,7 +34,7 @@ class FeatureContext extends MinkContext implements Context
      */
     public function iAmAMemberOfTheCardOnTheBoard($cardName, $boardName = 'some board')
     {
-        $board = new Board(md5($boardName), $boardName);
+        $board = new Board(md5($boardName), $boardName, null);
         $card = (new CardBuilder($cardName))
             ->withBoardId($board->getId())
             ->build();
@@ -58,7 +58,7 @@ class FeatureContext extends MinkContext implements Context
      */
     public function iHaveAProjectWithATodoCard($projectName, $cardName)
     {
-        $board = new Board(md5($projectName), $projectName);
+        $board = new Board(md5($projectName), $projectName, null);
         $projectCard = (new CardBuilder($projectName))
             ->linkedToProject($board->getId())
             ->build();

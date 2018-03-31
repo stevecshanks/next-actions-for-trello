@@ -51,7 +51,7 @@ class CardBuilder
             $this->name,
             $this->description,
             $this->url,
-            new Board($this->boardId, 'a board'),
+            new Board($this->boardId, 'a board', null),
             $this->dueDate,
             $this->labels,
             $this->checklists

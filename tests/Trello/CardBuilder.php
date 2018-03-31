@@ -3,10 +3,8 @@
 namespace App\Tests\Trello;
 
 use App\Trello\Board;
-use App\Trello\BoardId;
 use App\Trello\Card;
 use App\Trello\Checklist;
-use App\Trello\ChecklistItem;
 use App\Trello\Label;
 use DateTimeInterface;
 
@@ -53,7 +51,6 @@ class CardBuilder
             $this->name,
             $this->description,
             $this->url,
-            new BoardId($this->boardId),
             new Board($this->boardId, 'a board'),
             $this->dueDate,
             $this->labels,

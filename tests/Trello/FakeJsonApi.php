@@ -130,7 +130,7 @@ class FakeJsonApi implements Api
         return array_map(
             function (Card $card) {
                 return json_encode([
-                    'id' => $card->getBoardId()->getId(),
+                    'id' => $card->getBoard()->getId(),
                     'name' => 'a board'
                 ]);
             },

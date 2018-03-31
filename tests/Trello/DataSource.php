@@ -79,7 +79,7 @@ class DataSource
     public function addTodoCard(Card $card)
     {
         // In these tests, the board and list ids will be the same
-        $listOrBoardId = $card->getBoardId()->getId();
+        $listOrBoardId = $card->getBoard()->getId();
         if (!isset($this->todoCards[$listOrBoardId])) {
             $this->todoCards[$listOrBoardId] = [];
         }

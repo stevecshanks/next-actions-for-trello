@@ -20,8 +20,6 @@ class Card implements JsonSerializable
     protected $description;
     /** @var string */
     protected $url;
-    /** @var BoardId */
-    protected $boardId;
     /** @var Board */
     protected $board;
     /** @var DateTimeInterface|null */
@@ -37,7 +35,6 @@ class Card implements JsonSerializable
      * @param string $name
      * @param string $description
      * @param string $url
-     * @param BoardId $boardId
      * @param Board $board
      * @param DateTimeInterface|null $dueDate
      * @param Label[] $labels
@@ -48,7 +45,6 @@ class Card implements JsonSerializable
         string $name,
         string $description,
         string $url,
-        BoardId $boardId,
         Board $board,
         ?DateTimeInterface $dueDate,
         array $labels,
@@ -59,7 +55,6 @@ class Card implements JsonSerializable
         $this->description = $description;
         $this->url = $url;
         $this->board = $board;
-        $this->boardId = $boardId;
         $this->dueDate = $dueDate;
         $this->labels = $labels;
         $this->checklists = $checklists;
@@ -72,7 +67,6 @@ class Card implements JsonSerializable
             $json->name,
             $json->desc,
             $json->url,
-            new BoardId($json->idBoard),
             $board,
             $json->due ? Chronos::createFromFormat(static::DATE_FORMAT, $json->due) : null,
             array_map([Label::class, 'fromJson'], $json->labels),
@@ -113,11 +107,11 @@ class Card implements JsonSerializable
     }
 
     /**
-     * @return BoardId
+     * @return Board
      */
-    public function getBoardId(): BoardId
+    public function getBoard(): Board
     {
-        return $this->boardId;
+        return $this->board;
     }
 
     /**
@@ -151,14 +145,6 @@ class Card implements JsonSerializable
     }
 
     /**
-     * @return Board
-     */
-    public function getBoard(): Board
-    {
-        return $this->board;
-    }
-
-    /**
      * @return mixed
      */
     public function jsonSerialize()
@@ -168,7 +154,7 @@ class Card implements JsonSerializable
             'name' => $this->name,
             'desc' => $this->description,
             'url' => $this->url,
-            'idBoard' => $this->boardId->getId(),
+            'idBoard' => $this->board->getId(),
             'due' => $this->dueDate ? $this->dueDate->format(static::DATE_FORMAT) : null,
             'labels' => $this->labels,
             'checklists' => $this->checklists

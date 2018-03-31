@@ -246,7 +246,7 @@ class JsonApiTest extends TestCase
         $this->assertSame($card1->getName(), $card2->getName());
         $this->assertSame($card1->getDescription(), $card2->getDescription());
         $this->assertSame($card1->getUrl(), $card2->getUrl());
-        $this->assertSame($card1->getBoardId()->getId(), $card2->getBoardId()->getId());
+        $this->assertSame($card1->getBoard()->getId(), $card2->getBoard()->getId());
         $this->assertSame($card1->getDueDate(), $card2->getDueDate());
         $this->assertSame($card1->getLabels(), $card2->getLabels());
     }
@@ -256,7 +256,7 @@ class JsonApiTest extends TestCase
         return array_map(
             function (Card $card) {
                 return json_encode([
-                    'id' => $card->getBoardId()->getId(),
+                    'id' => $card->getBoard()->getId(),
                     'name' => 'a board'
                 ]);
             },

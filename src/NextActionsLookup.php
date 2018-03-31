@@ -61,7 +61,7 @@ class NextActionsLookup
         return array_map(
             function (Card $card) {
                 $project = Project::fromBoard(
-                    $this->api->fetchBoard($card->getBoardId())
+                    $this->api->fetchBoard($card->getBoard())
                 );
                 return (new NextAction($card))
                     ->forProject($project);

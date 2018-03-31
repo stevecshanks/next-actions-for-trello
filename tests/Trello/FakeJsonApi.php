@@ -37,8 +37,10 @@ class FakeJsonApi implements Api
      */
     public function fetchCardsIAmAMemberOf(): array
     {
+        $cards = self::$dataSource->getJoinedCards();
         $client = (new MockClientBuilder())
-            ->withResponse($this->buildJsonForCards(self::$dataSource->getJoinedCards()))
+            ->withResponse($this->buildJsonForCards($cards))
+            ->withResponses($this->createMockBoardResponses($cards))
             ->build();
         $jsonApi = new JsonApi($client, $this->config);
 
@@ -52,21 +54,16 @@ class FakeJsonApi implements Api
     public function fetchCardsOnList(ListId $listId): array
     {
         if ($listId->getId() === $this->config->getProjectsListId()->getId()) {
-            $json = $this->buildJsonForCards(
-                self::$dataSource->getProjectCards()
-            );
+            $cards = self::$dataSource->getProjectCards();
         } elseif ($listId->getId() === $this->config->getNextActionsListId()->getId()) {
-            $json = $this->buildJsonForCards(
-                self::$dataSource->getNextActionCards()
-            );
+            $cards = self::$dataSource->getNextActionCards();
         } else {
-            $json = $this->buildJsonForCards(
-                self::$dataSource->getCardsOnTodoList($listId->getId())
-            );
+            $cards = self::$dataSource->getCardsOnTodoList($listId->getId());
         }
 
         $client = (new MockClientBuilder())
-            ->withResponse($json)
+            ->withResponse($this->buildJsonForCards($cards))
+            ->withResponses($this->createMockBoardResponses($cards))
             ->build();
         $jsonApi = new JsonApi($client, $this->config);
 
@@ -126,5 +123,18 @@ class FakeJsonApi implements Api
     protected function buildJsonForCards(array $cards): string
     {
         return json_encode($cards);
+    }
+
+    protected function createMockBoardResponses(array $cards)
+    {
+        return array_map(
+            function (Card $card) {
+                return json_encode([
+                    'id' => $card->getBoardId()->getId(),
+                    'name' => 'a board'
+                ]);
+            },
+            $cards
+        );
     }
 }

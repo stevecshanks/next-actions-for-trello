@@ -18,27 +18,21 @@ class MockClientBuilder
     protected $body;
     /** @var callable|null */
     protected $history;
+    /** @var Response[] */
+    protected $responses;
 
     /**
      * MockClientBuilder constructor.
      */
     public function __construct()
     {
-        $this->statusCode = 200;
-        $this->headers = [];
-        $this->body = null;
         $this->history = null;
+        $this->responses = [];
     }
 
     public function build(): Client
     {
-        $response = new Response(
-            $this->statusCode,
-            $this->headers,
-            $this->body
-        );
-
-        $mockHandler = new MockHandler([$response]);
+        $mockHandler = new MockHandler($this->responses);
         $handlerStack = HandlerStack::create($mockHandler);
         if ($this->history !== null) {
             $handlerStack->push($this->history);
@@ -48,7 +42,15 @@ class MockClientBuilder
 
     public function withResponse(string $response)
     {
-        $this->body = $response;
+        $this->responses[] = new Response(200, [], $response);
+        return $this;
+    }
+
+    public function withResponses(array $responses)
+    {
+        foreach ($responses as $response) {
+            $this->withResponse($response);
+        }
         return $this;
     }
 

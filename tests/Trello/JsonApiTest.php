@@ -29,6 +29,7 @@ class JsonApiTest extends TestCase
     {
         $client = (new MockClientBuilder())
             ->withResponse(json_encode($cards))
+            ->withResponses($this->createMockBoardResponses($cards))
             ->build();
         $api = new JsonApi($client, $this->createMock(Config::class));
 
@@ -57,6 +58,7 @@ class JsonApiTest extends TestCase
     {
         $client = (new MockClientBuilder())
             ->withResponse(json_encode($cards))
+            ->withResponses($this->createMockBoardResponses($cards))
             ->build();
         $api = new JsonApi($client, $this->createMock(Config::class));
 
@@ -179,6 +181,27 @@ class JsonApiTest extends TestCase
         $this->assertSame('a url', $result->getBackgroundImageUrl());
     }
 
+    public function testCardsAreCreatedWithCorrectBoard()
+    {
+        $cardJson = json_encode([
+            (new CardBuilder('test'))->build()
+        ]);
+        $boardJson = json_encode([
+            'id' => '123',
+            'name' => 'a board'
+        ]);
+
+        $client = (new MockClientBuilder())
+            ->withResponse($cardJson)
+            ->withResponse($boardJson)
+            ->build();
+        $api = new JsonApi($client, $this->createMock(Config::class));
+
+        $result = $api->fetchCardsIAmAMemberOf();
+
+        $this->assertSame('123', $result[0]->getBoard()->getId());
+    }
+
     protected function assertApiMethodMakesRequestToUrl(callable $callMethod, string $url)
     {
         $container = [];
@@ -212,5 +235,18 @@ class JsonApiTest extends TestCase
         $this->assertSame($card1->getBoardId()->getId(), $card2->getBoardId()->getId());
         $this->assertSame($card1->getDueDate(), $card2->getDueDate());
         $this->assertSame($card1->getLabels(), $card2->getLabels());
+    }
+
+    protected function createMockBoardResponses(array $cards)
+    {
+        return array_map(
+            function (Card $card) {
+                return json_encode([
+                    'id' => $card->getBoardId()->getId(),
+                    'name' => 'a board'
+                ]);
+            },
+            $cards
+        );
     }
 }

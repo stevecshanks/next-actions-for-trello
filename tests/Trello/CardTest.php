@@ -24,7 +24,7 @@ class CardTest extends TestCase
         $this->assertSame([$checklist2, $checklist1], $card->getChecklists());
     }
 
-    public function testFromJsonStoresBoardIfSpecified()
+    public function testFromJsonStoresBoard()
     {
         $json = json_encode((new CardBuilder('Test'))->build());
         $board = $this->createMock(Board::class);

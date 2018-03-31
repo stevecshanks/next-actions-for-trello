@@ -60,7 +60,7 @@ class Card implements JsonSerializable
         $this->checklists = $checklists;
     }
 
-    public static function fromJson(stdClass $json, Board $board = null)
+    public static function fromJson(stdClass $json, Board $board)
     {
         return new static(
             $json->id,

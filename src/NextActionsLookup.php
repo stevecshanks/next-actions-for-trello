@@ -49,7 +49,7 @@ class NextActionsLookup
                 } elseif ($nextAction2->getDueDate()) {
                     return 1;
                 }
-                return 0;
+                return $nextAction1->getName() <=> $nextAction2->getName();
             }
         );
 

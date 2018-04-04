@@ -17,6 +17,7 @@ h2 {
 }
 
 .icon-container {
+    background-color: #2a79bf;
     height: 50px;
     width: 50px;
     overflow: hidden;

@@ -3,9 +3,9 @@
 {% block title %}Next Actions{% endblock %}
 
 {% block main %}
-    <div class="list-group">
+    <div class="list-group d-flex flex-row flex-wrap">
         {% for action in nextActions %}
-            <a href="{{ action.url }}" class="list-group-item list-group-item-action flex-column align-items-start">
+            <a href="{{ action.url }}" class="list-group-item w-50 list-group-item-action">
                 <div class="icon-container">
                     {%  if action.imageUrl %}
                         <img src="{{ action.imageUrl }}" />

@@ -1,5 +1,9 @@
 VENDOR_BIN := ./vendor/bin
 
+.PHONY: run
+run:
+	./bin/console server:run
+
 .PHONY: test
 test: phpunit behat
 

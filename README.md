@@ -5,4 +5,40 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/535d22174a604690813e804ced26645e)](https://www.codacy.com/app/stevecshanks/next-actions-for-trello?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=stevecshanks/next-actions-for-trello&amp;utm_campaign=Badge_Grade)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/stevecshanks/next-actions-for-trello/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/stevecshanks/next-actions-for-trello/?branch=master)
 
-Work In Progress to replace my [Trello Next Actions](https://github.com/stevecshanks/trello-next-actions) script with a web-app.
+## What is it?
+
+It brings together:
+
+- all of your smaller todo items that don't merit their own board
+- every card you are a member of
+- the first card in each project's "Todo" list
+
+## How do I set it up?
+
+*Note: While I use this app pretty much every day, it's still a work in progress, so the steps below are a bit on the complex side*
+
+1. `git clone` this repository somewhere
+1. Make sure you have PHP 7.1 and Composer installed
+1. `cd` to the repository you cloned and run `composer install` 
+1. You'll obviously need a Trello board with at least two lists: one containing links to your project boards, and one containing a list of smaller tasks that don't merit their own board
+1. Next you'll need to get some information from Trello:
+    1. Get your Application Key at [https://trello.com/app-key](https://trello.com/app-key)
+    1. **FIXME** something about access key (remember, read only!)
+    1. You'll need the IDs of the two lists on your board - the easiest way to get it is to add `.json` after the board identifier in the URL e.g. `https://trello.com/b/abcd1234.json`.  Just search for the name of each list and you'll see the ID nearby.
+1. You'll need to put these details somewhere the app can read then - either a `.env` file (see `.env.dist` for an example) or by exporting them as environment variables (again, see `.env.dist` for details of what you'd need to export)
+
+## How do I use it?
+
+```
+make run
+```
+
+The application should then be available on localhost, with the port defaulting to 8000 e.g. [http://localhost:8000/](http://localhost:8000/)
+
+## How do I run the tests?
+
+If you want to run the tests, just type:
+
+```
+make test
+```

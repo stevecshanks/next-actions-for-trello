@@ -17,6 +17,18 @@ It brings together:
 
 *Note: While I use this app pretty much every day, it's still a work in progress, so the steps below are a bit on the complex side*
 
+Firstly you'll need to set up a couple of Trello lists - one for small tasks that don't require a project board (I call this "Todo") and one to list your projects (I call this one "Projects").
+
+[image goes here]
+
+Each card in the Projects list should have the URL of the project board as its description.
+
+Your individual project boards should each have a list called "Todo" - the card at the top of each list is considered its Next Action.
+
+[images goes here]
+
+Then you'll need to run through the following steps to set up the app:
+
 1. `git clone` this repository somewhere
 1. Make sure you have PHP 7.1 (at least) and Composer installed
 1. `cd` to the repository you cloned and run `composer install` 
@@ -34,6 +46,8 @@ make run
 ```
 
 The application should then be available on localhost, with the port defaulting to 8000 e.g. [http://localhost:8000/](http://localhost:8000/)
+
+[image goes here]
 
 ## How do I run the tests?
 

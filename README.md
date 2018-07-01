@@ -18,7 +18,7 @@ It brings together:
 *Note: While I use this app pretty much every day, it's still a work in progress, so the steps below are a bit on the complex side*
 
 1. `git clone` this repository somewhere
-1. Make sure you have PHP 7.1 and Composer installed
+1. Make sure you have PHP 7.1 (at least) and Composer installed
 1. `cd` to the repository you cloned and run `composer install` 
 1. You'll obviously need a Trello board with at least two lists: one containing links to your project boards, and one containing a list of smaller tasks that don't merit their own board
 1. Next you'll need to get some information from Trello:

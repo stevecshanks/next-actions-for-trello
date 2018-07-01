@@ -19,13 +19,13 @@ It brings together:
 
 Firstly you'll need to set up a couple of Trello lists - one for small tasks that don't require a project board (I call this "Todo") and one to list your projects (I call this one "Projects").
 
-[image goes here]
+![Example board](https://user-images.githubusercontent.com/24637079/42135236-fb1467aa-7d3f-11e8-9774-fb8784747f29.png)
 
 Each card in the Projects list should have the URL of the project board as its description.
 
 Your individual project boards should each have a list called "Todo" - the card at the top of each list is considered its Next Action.
 
-[images goes here]
+![Example project](https://user-images.githubusercontent.com/24637079/42135239-054e0ff0-7d40-11e8-9f89-d15edd5577c0.png)
 
 Then you'll need to run through the following steps to set up the app:
 
@@ -47,7 +47,7 @@ make run
 
 The application should then be available on localhost, with the port defaulting to 8000 e.g. [http://localhost:8000/](http://localhost:8000/)
 
-[image goes here]
+![Example](https://user-images.githubusercontent.com/24637079/42135240-08bda61e-7d40-11e8-94a1-9c414d5c0cca.png)
 
 ## How do I run the tests?
 

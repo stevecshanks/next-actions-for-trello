@@ -22,8 +22,8 @@ It brings together:
 1. `cd` to the repository you cloned and run `composer install` 
 1. You'll obviously need a Trello board with at least two lists: one containing links to your project boards, and one containing a list of smaller tasks that don't merit their own board
 1. Next you'll need to get some information from Trello:
-    1. Get your Application Key at [https://trello.com/app-key](https://trello.com/app-key)
-    1. **FIXME** something about access key (remember, read only!)
+    1. Get your Application Key at https://trello.com/app-key
+    1. Change {YourAPIKey} to the key above and browse to https://trello.com/1/authorize?expiration=never&name=Next%20Actions%20For%20Trello&scope=read&response_type=token&key={YourAPIKey}
     1. You'll need the IDs of the two lists on your board - the easiest way to get it is to add `.json` after the board identifier in the URL e.g. `https://trello.com/b/abcd1234.json`.  Just search for the name of each list and you'll see the ID nearby.
 1. You'll need to put these details somewhere the app can read then - either a `.env` file (see `.env.dist` for an example) or by exporting them as environment variables (again, see `.env.dist` for details of what you'd need to export)
 

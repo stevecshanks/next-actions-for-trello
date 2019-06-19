@@ -137,9 +137,7 @@ class Card implements JsonSerializable
     {
         usort(
             $this->checklists,
-            function (Checklist $checklist1, Checklist $checklist2) {
-                return $checklist1->getPosition() <=> $checklist2->getPosition();
-            }
+            fn(Checklist $a, Checklist $b) => $a->getPosition() <=> $b->getPosition()
         );
         return $this->checklists;
     }

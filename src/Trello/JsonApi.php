@@ -103,9 +103,10 @@ class JsonApi implements Api
         $json = Json::fromString($response->getBody());
 
         return array_map(
-            function (stdClass $cardJson) {
-                return Card::fromJson($cardJson, $this->fetchBoard(new BoardId($cardJson->idBoard)));
-            },
+            fn(stdClass $cardJson) => Card::fromJson(
+                $cardJson,
+                $this->fetchBoard(new BoardId($cardJson->idBoard))
+            ),
             $json->decode()
         );
     }
@@ -125,9 +126,7 @@ class JsonApi implements Api
         $json = Json::fromString($response->getBody());
 
         return array_map(
-            function (stdClass $listJson) {
-                return new NamedList($listJson->id, $listJson->name);
-            },
+            fn(stdClass $listJson) => new NamedList($listJson->id, $listJson->name),
             $json->decode()
         );
     }

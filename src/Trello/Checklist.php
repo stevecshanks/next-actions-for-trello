@@ -38,9 +38,7 @@ class Checklist implements JsonSerializable
     {
         usort(
             $this->items,
-            function (ChecklistItem $item1, ChecklistItem $item2) {
-                return $item1->getPosition() <=> $item2->getPosition();
-            }
+            fn(ChecklistItem $item1, ChecklistItem $item2) => $item1->getPosition() <=> $item2->getPosition()
         );
         return $this->items;
     }
@@ -57,9 +55,7 @@ class Checklist implements JsonSerializable
     {
         return [
             'checkItems' => array_map(
-                function (ChecklistItem $item) {
-                    return $item->jsonSerialize();
-                },
+                fn(ChecklistItem $item) => $item->jsonSerialize(),
                 $this->items
             ),
             'pos' => $this->position,

@@ -73,9 +73,7 @@ class NextActionsLookup
     protected function fetchManuallyCreatedNextActions()
     {
         return array_map(
-            function (Card $card) {
-                return new NextAction($card);
-            },
+            fn(Card $card) => new NextAction($card),
             $this->api->fetchCardsOnList($this->config->getNextActionsListId())
         );
     }

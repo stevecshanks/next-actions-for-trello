@@ -138,7 +138,7 @@ class NextActionTest extends TestCase
         $this->assertTrue($nextAction->isDueSoon());
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Chronos::setTestNow();
     }

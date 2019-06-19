@@ -38,12 +38,12 @@ class FakeJsonApiTest extends TestCase
         $this->assertSame([], $api->fetchListsOnBoard($board));
     }
 
-    public function testFetchListsOnBoardReturnsTodoLis()
+    public function testFetchListsOnBoardReturnsTodoList()
     {
         $board = $this->createMock(Board::class);
-        $board->method('getId')->willReturn(1);
+        $board->method('getId')->willReturn('an id');
 
-        $card = (new CardBuilder('some card'))->withBoardId('1')->build();
+        $card = (new CardBuilder('some card'))->withBoardId('an id')->build();
 
         $dataSource = new DataSource();
         $dataSource->addBoard($board);
@@ -71,7 +71,7 @@ class FakeJsonApiTest extends TestCase
     public function testFetchBoardReturnsCorrectBoard()
     {
         $board = $this->createMock(Board::class);
-        $board->method('getId')->willReturn(1);
+        $board->method('getId')->willReturn('an id');
 
         $dataSource = new DataSource();
         $dataSource->addBoard($board);
@@ -79,7 +79,7 @@ class FakeJsonApiTest extends TestCase
 
         $api = new FakeJsonApi($this->createMock(Config::class));
 
-        $result = $api->fetchBoard(new BoardId('1'));
+        $result = $api->fetchBoard(new BoardId('an id'));
 
         $this->assertSame($board->getId(), $result->getId());
     }

@@ -1,4 +1,4 @@
-FROM php:7.3-cli
+FROM php:7.4-rc-cli
 
 RUN curl -sS https://getcomposer.org/installer | php \
     && chmod +x composer.phar\

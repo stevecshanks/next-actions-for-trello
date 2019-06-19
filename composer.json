@@ -2,7 +2,7 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.4.0",
         "ext-iconv": "*",
         "cakephp/chronos": "^1.1",
         "guzzlehttp/guzzle": "^6.3",

@@ -65,7 +65,8 @@
     "extra": {
         "symfony": {
             "id": "01C1XDDH7Q2T28ANVSV23SMAME",
-            "allow-contrib": false
+            "allow-contrib": false,
+            "require": "4.3.*"
         }
     }
 }

@@ -37,9 +37,7 @@ class NextActionForProjectLookupTest extends TestCase
 
         $api = $this->createMock(Api::class);
         $api->method('fetchListsOnBoard')->willReturnCallback(
-            function (BoardId $boardId) use ($todoList) {
-                return $boardId->getId() === 'project' ? [$todoList] : [];
-            }
+            fn(BoardId $boardId) => $boardId->getId() === 'project' ? [$todoList] : []
         );
 
         $api->method('fetchCardsOnList')->willReturn([]);
@@ -57,9 +55,7 @@ class NextActionForProjectLookupTest extends TestCase
         $api = $this->createMock(Api::class);
 
         $api->method('fetchListsOnBoard')->willReturnCallback(
-            function (BoardId $boardId) use ($todoList) {
-                return $boardId->getId() === 'project' ? [$todoList] : [];
-            }
+            fn(BoardId $boardId) => $boardId->getId() === 'project' ? [$todoList] : []
         );
         $api->method('fetchCardsOnList')->willReturnCallback(
             function (ListId $listId) {

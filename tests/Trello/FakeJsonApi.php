@@ -128,12 +128,10 @@ class FakeJsonApi implements Api
     protected function createMockBoardResponses(array $cards)
     {
         return array_map(
-            function (Card $card) {
-                return json_encode([
-                    'id' => $card->getBoard()->getId(),
-                    'name' => 'a board'
-                ]);
-            },
+            fn(Card $card) => json_encode([
+                'id' => $card->getBoard()->getId(),
+                'name' => 'a board'
+            ]),
             $cards
         );
     }

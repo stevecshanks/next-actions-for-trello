@@ -15,9 +15,7 @@ class JsonApiTest extends TestCase
     public function testFetchCardsIAmAMemberOfMakesCorrectApiCall()
     {
         $this->assertApiMethodMakesRequestToUrl(
-            function (JsonApi $api) {
-                $api->fetchCardsIAmAMemberOf();
-            },
+            fn(JsonApi $api) => $api->fetchCardsIAmAMemberOf(),
             JsonApi::BASE_URL . '/members/me/cards?checklists=all&key=foo&token=bar'
         );
     }
@@ -44,9 +42,7 @@ class JsonApiTest extends TestCase
     public function testFetchCardsOnListMakesCorrectApiCall()
     {
         $this->assertApiMethodMakesRequestToUrl(
-            function (JsonApi $api) {
-                $api->fetchCardsOnList(new ListId('123'));
-            },
+            fn(JsonApi $api) => $api->fetchCardsOnList(new ListId('123')),
             JsonApi::BASE_URL . '/lists/123/cards?checklists=all&key=foo&token=bar'
         );
     }
@@ -86,9 +82,7 @@ class JsonApiTest extends TestCase
     public function testFetchListsOnBoardMakesCorrectApiCall()
     {
         $this->assertApiMethodMakesRequestToUrl(
-            function (JsonApi $api) {
-                $api->fetchListsOnBoard(new BoardId('123'));
-            },
+            fn(JsonApi $api) => $api->fetchListsOnBoard(new BoardId('123')),
             JsonApi::BASE_URL . '/boards/123/lists?key=foo&token=bar'
         );
     }
@@ -135,9 +129,7 @@ class JsonApiTest extends TestCase
     public function testFetchBoardMakesCorrectApiCall()
     {
         $this->assertApiMethodMakesRequestToUrl(
-            function (JsonApi $api) {
-                $api->fetchBoard(new BoardId('123'));
-            },
+            fn(JsonApi $api) => $api->fetchBoard(new BoardId('123')),
             JsonApi::BASE_URL . '/boards/123?key=foo&token=bar'
         );
     }
@@ -254,12 +246,10 @@ class JsonApiTest extends TestCase
     protected function createMockBoardResponses(array $cards)
     {
         return array_map(
-            function (Card $card) {
-                return json_encode([
-                    'id' => $card->getBoard()->getId(),
-                    'name' => 'a board'
-                ]);
-            },
+            fn(Card $card) => json_encode([
+                'id' => $card->getBoard()->getId(),
+                'name' => 'a board'
+            ]),
             $cards
         );
     }

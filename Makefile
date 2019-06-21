@@ -1,16 +1,14 @@
+.PHONY: run test unit behat
+
 VENDOR_BIN := ./vendor/bin
 
-.PHONY: run
 run:
-	./bin/console server:run
+	docker-compose up
 
-.PHONY: test
-test: phpunit behat
+test: unit behat
 
-.PHONY: phpunit
-phpunit:
-	$(VENDOR_BIN)/phpunit
+unit:
+	docker-compose run symfony $(VENDOR_BIN)/phpunit
 
-.PHONY: behat
 behat:
-	$(VENDOR_BIN)/behat --format=progress
+	docker-compose run symfony $(VENDOR_BIN)/behat --format=progress
